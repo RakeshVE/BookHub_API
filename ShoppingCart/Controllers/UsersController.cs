@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ShoppingCart.Interfaces;
 using ShoppingCart.Models;
+using ShoppingCart.Repositories;
 
 namespace ShoppingCart.Controllers
 {
@@ -13,17 +15,18 @@ namespace ShoppingCart.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly ShoppingCartContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(ShoppingCartContext context)
+        public UsersController(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var users = await _userRepository.GetUsers();
+            return Ok(users);
         }
        
     }

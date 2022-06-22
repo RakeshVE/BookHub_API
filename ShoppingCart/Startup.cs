@@ -30,8 +30,8 @@ namespace ShoppingCart
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddControllers();
             services.AddDbContext<ShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("myConnection")));
+            services.AddControllers();
             services.AddCors();
             services.AddSwaggerGen();
         }
