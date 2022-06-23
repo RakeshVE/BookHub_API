@@ -382,13 +382,9 @@ namespace ShoppingCart.Models
 
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.PasswordHash)
-                    .IsRequired()
-                    .HasMaxLength(500);
+                entity.Property(e => e.PasswordHash).IsRequired();
 
-                entity.Property(e => e.PasswordSalt)
-                    .IsRequired()
-                    .HasMaxLength(500);
+                entity.Property(e => e.PasswordSalt).IsRequired();
 
                 entity.Property(e => e.Phone)
                     .IsRequired()
