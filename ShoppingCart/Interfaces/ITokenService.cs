@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShoppingCart.Interfaces
 {
-   public  interface ITokenService
+    public interface ITokenService
     {
         string CreateToken(User user);
     }

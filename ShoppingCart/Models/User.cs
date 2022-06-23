@@ -14,7 +14,7 @@ namespace ShoppingCart.Models
             PaymentDetails = new HashSet<PaymentDetail>();
             Wishlists = new HashSet<Wishlist>();
         }
-        
+
         public int UserId { get; set; }
         public string UserName { get; set; }
         public byte[] PasswordHash { get; set; }

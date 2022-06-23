@@ -21,7 +21,7 @@ namespace ShoppingCart.Repositories
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _context.Users.ToListAsync();
-            
+
         }
 
         public async Task<User> GetUserById(int id)

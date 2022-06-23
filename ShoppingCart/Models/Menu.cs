@@ -14,6 +14,7 @@ namespace ShoppingCart.Models
 
         public int MenuId { get; set; }
         public string MenuName { get; set; }
+        public string SubMenu { get; set; }
 
         public virtual ICollection<Book> Books { get; set; }
     }

@@ -19,8 +19,8 @@ namespace ShoppingCart.Models
         public int BookId { get; set; }
         public string Title { get; set; }
         public byte[] Image { get; set; }
-        public long ListPrice { get; set; }
-        public long OurPrice { get; set; }
+        public decimal ListPrice { get; set; }
+        public decimal OurPrice { get; set; }
         public int? Rating { get; set; }
         public int? ReviewCount { get; set; }
         public string Details { get; set; }
@@ -35,6 +35,9 @@ namespace ShoppingCart.Models
         public int? CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
+        public string ContentType { get; set; }
+        public string Certification { get; set; }
+        public string Publisher { get; set; }
 
         public virtual Menu Menu { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }

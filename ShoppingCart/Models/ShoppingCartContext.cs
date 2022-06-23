@@ -83,13 +83,23 @@ namespace ShoppingCart.Models
 
             modelBuilder.Entity<Book>(entity =>
             {
+                entity.Property(e => e.Certification).HasMaxLength(100);
+
+                entity.Property(e => e.ContentType).HasMaxLength(50);
+
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Details).HasMaxLength(500);
 
+                entity.Property(e => e.ListPrice).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
+                entity.Property(e => e.OurPrice).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.ProductType).HasMaxLength(50);
+
+                entity.Property(e => e.Publisher).HasMaxLength(50);
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -261,6 +271,8 @@ namespace ShoppingCart.Models
                 entity.Property(e => e.MenuName)
                     .IsRequired()
                     .HasMaxLength(100);
+
+                entity.Property(e => e.SubMenu).HasMaxLength(100);
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
