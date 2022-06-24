@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
 using ShoppingCart.Models;
 using System;
@@ -20,6 +21,12 @@ namespace ShoppingCart.Repositories
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _context.Users.ToListAsync();
+
+        }
+
+        public async Task<User> GetUserById(int id)
+        {
+            return await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
         }
     }
 }
