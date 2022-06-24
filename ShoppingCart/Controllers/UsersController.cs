@@ -28,7 +28,7 @@ namespace ShoppingCart.Controllers
         [HttpGet("GetUsers")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var users =  await _userRepository.GetUsers();
+            var users = await _userRepository.GetUsers();
             return Ok(users);
         }
 

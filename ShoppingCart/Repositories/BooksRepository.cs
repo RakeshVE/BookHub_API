@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace ShoppingCart.Repositories
 {
-    public class BooksRepository:IBooksRepository
+    public class BooksRepository : IBooksRepository
     {
         private readonly ShoppingCartContext _context;
-       
+
 
         public BooksRepository(ShoppingCartContext context)
         {
@@ -25,10 +25,10 @@ namespace ShoppingCart.Repositories
 
 
         public async Task<IEnumerable<BookDto>> GetBook()
-        {            
+        {
             var book1 = await _context.Books.ToListAsync();
             List<BookDto> bookDto = new List<BookDto>();
-           
+
             foreach (var items in book1)
             {
                 BookDto _convImg = new BookDto();
@@ -37,8 +37,9 @@ namespace ShoppingCart.Repositories
                     string imreBase64Data = Convert.ToBase64String(items.Image);
                     string imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
                     _convImg.Image = imgDataURL;
-                }                
-                
+                }
+
+                _convImg.BookId = items.BookId;
                 _convImg.Title = items.Title;
                 _convImg.ListPrice = items.ListPrice;
                 _convImg.OurPrice = items.OurPrice;
@@ -52,30 +53,31 @@ namespace ShoppingCart.Repositories
                 _convImg.IsActive = items.IsActive;
                 _convImg.MenuId = items.MenuId;
                 _convImg.IsBook = true;
-                
+
                 bookDto.Add(_convImg);
             }
 
-            return  bookDto;            
+            return bookDto;
         }
 
-        
+
         public void UploadBook(BookDto book, IFormFile files)
         {
             Book _books = new Book();
             if (book != null)
-            {               
+            {
                 _books.Title = book.Title;
-                    
-                    if (files.Length > 0)
+
+                if (files.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
                     {
-                        using (var ms = new MemoryStream())
-                        {
-                            files.CopyTo(ms);
-                            var fileBytes = ms.ToArray();
-                            _books.Image = fileBytes;                         
-                        }
-                    }                
+                        files.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        _books.Image = fileBytes;
+                    }
+                }
+                _books.BookId = book.BookId;
                 _books.ListPrice = book.ListPrice;
                 _books.OurPrice = book.OurPrice;
                 _books.Rating = book.Rating;
@@ -92,12 +94,12 @@ namespace ShoppingCart.Repositories
                 _books.CreatedBy = 1;
             }
             _context.Books.Add(_books);
-             _context.SaveChanges();         
+            _context.SaveChanges();
         }
 
         public async Task<BookDto> GetBookById(int id)
         {
-            var book=  await _context.Books.Where(x => x.BookId == id).SingleOrDefaultAsync();
+            var book = await _context.Books.Where(x => x.BookId == id).SingleOrDefaultAsync();
             BookDto _convImg = new BookDto();
             if (book is not null)
             {
@@ -107,6 +109,7 @@ namespace ShoppingCart.Repositories
                     string imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
                     _convImg.Image = imgDataURL;
                 }
+                _convImg.BookId = book.BookId;
                 _convImg.Title = book.Title;
                 _convImg.ListPrice = book.ListPrice;
                 _convImg.OurPrice = book.OurPrice;
@@ -122,9 +125,9 @@ namespace ShoppingCart.Repositories
                 _convImg.IsBook = true;
                 return _convImg;
             }
-            
-           
-            
+
+
+
             return _convImg;
         }
 
