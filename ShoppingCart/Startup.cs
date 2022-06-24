@@ -38,7 +38,7 @@ namespace ShoppingCart
             services.AddDbContext<ShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("myConnection")));
             services.AddControllers();
             services.AddCors();
-            services.AddSwaggerGen(c=> {
+            services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sample.FileUpload.Api", Version = "v1" });
                 c.OperationFilter<SwaggerFileOperationFilter>();
             });

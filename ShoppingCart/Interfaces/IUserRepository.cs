@@ -9,5 +9,6 @@ namespace ShoppingCart.Interfaces
     public interface IUserRepository
     {
         Task<IEnumerable<User>> GetUsers();
+       
     }
 }

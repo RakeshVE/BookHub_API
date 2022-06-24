@@ -19,6 +19,7 @@ namespace ShoppingCart.Models
 
         public virtual DbSet<Billing> Billings { get; set; }
         public virtual DbSet<Book> Books { get; set; }
+        public virtual DbSet<BookImage> BookImages { get; set; }
         public virtual DbSet<Cart> Carts { get; set; }
         public virtual DbSet<Checkout> Checkouts { get; set; }
         public virtual DbSet<CorpSale> CorpSales { get; set; }
@@ -35,6 +36,7 @@ namespace ShoppingCart.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
+
             }
         }
 
@@ -83,13 +85,23 @@ namespace ShoppingCart.Models
 
             modelBuilder.Entity<Book>(entity =>
             {
+                entity.Property(e => e.Certification).HasMaxLength(100);
+
+                entity.Property(e => e.ContentType).HasMaxLength(50);
+
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Details).HasMaxLength(500);
 
+                entity.Property(e => e.ListPrice).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
+                entity.Property(e => e.OurPrice).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.ProductType).HasMaxLength(50);
+
+                entity.Property(e => e.Publisher).HasMaxLength(50);
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -100,6 +112,15 @@ namespace ShoppingCart.Models
                     .HasForeignKey(d => d.MenuId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Books_Menu");
+            });
+
+            modelBuilder.Entity<BookImage>(entity =>
+            {
+                entity.ToTable("BookImage");
+
+                entity.Property(e => e.ImageName).HasMaxLength(100);
+
+                entity.Property(e => e.ImageUrl).HasMaxLength(500);
             });
 
             modelBuilder.Entity<Cart>(entity =>
@@ -261,6 +282,8 @@ namespace ShoppingCart.Models
                 entity.Property(e => e.MenuName)
                     .IsRequired()
                     .HasMaxLength(100);
+
+                entity.Property(e => e.SubMenu).HasMaxLength(100);
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
