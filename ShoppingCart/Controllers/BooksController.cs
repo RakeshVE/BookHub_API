@@ -86,43 +86,7 @@ namespace ShoppingCart.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
-
-        //[HttpPost("UploadBookImage"), DisableRequestSizeLimit]
-        //public async Task<IActionResult> UploadBookImage([FromForm] IFormFile files, [FromQuery] int bookId)
-        //{
-        //    try
-        //    {
-        //        //var file = Request.Form.Files[0];
-        //        BookImage bookImage = new BookImage();
-        //        var folderName = Path.Combine("Resources", "Images");
-        //        var formCollection = await Request.ReadFormAsync();
-        //        var file = formCollection.Files.First();
-        //        var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-        //        if (file.Length > 0)
-        //        {
-        //            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-        //            var fullPath = Path.Combine(pathToSave, fileName);
-        //            var dbPath = Path.Combine(folderName, fileName);
-        //            using (var stream = new FileStream(fullPath, FileMode.Create))
-        //            {
-        //                file.CopyTo(stream);
-        //            }
-        //            bookImage.BookId=bookId;
-        //            bookImage.ImageName = fileName;
-        //            bookImage.ImageUrl = fullPath;
-        //            _bookRepository.UploadBookImage(bookImage);
-        //            return Ok(new { dbPath });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex}");
-        //    }
-        //}
+   
 
 
         [HttpGet("GetBookImage")]
@@ -147,7 +111,7 @@ namespace ShoppingCart.Controllers
 
             if (image == null || image.Length == 0)
             {
-                return RedirectToPage("Upload");
+                return BadRequest("Server error");
             }
 
             IFormatProvider provider = CultureInfo.CreateSpecificCulture("en-US");
