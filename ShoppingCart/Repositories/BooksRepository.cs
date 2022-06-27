@@ -10,6 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Globalization;
+using CloudinaryDotNet;
+using Newtonsoft.Json.Linq;
+//using CloudinaryDotNet.Actions;
+//using UploadResult = ShoppingCart.Models.UploadResult;
 
 namespace ShoppingCart.Repositories
 {
@@ -17,10 +22,10 @@ namespace ShoppingCart.Repositories
     {
         private readonly ShoppingCartContext _context;
        
-
         public BooksRepository(ShoppingCartContext context)
         {
             _context = context;
+           
         }
 
 
@@ -32,6 +37,7 @@ namespace ShoppingCart.Repositories
             foreach (var items in book1)
             {
                 BookDto _convImg = new BookDto();
+                _convImg.BookId = items.BookId;
                 if (items.Image != null)
                 {
                     string imreBase64Data = Convert.ToBase64String(items.Image);
@@ -107,6 +113,7 @@ namespace ShoppingCart.Repositories
                     string imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
                     _convImg.Image = imgDataURL;
                 }
+                _convImg.BookId = book.BookId;
                 _convImg.Title = book.Title;
                 _convImg.ListPrice = book.ListPrice;
                 _convImg.OurPrice = book.OurPrice;
@@ -134,11 +141,15 @@ namespace ShoppingCart.Repositories
             _context.SaveChanges();
 
         }
-        public async Task<IEnumerable<BookImage>> GetBookImage(int bookId)
+        public async Task<IEnumerable<Photo>> GetBookImage(int bookId)
         {
-            var bookImages = await _context.BookImages.Where(x => x.BookId == bookId).ToListAsync();
-            return bookImages;
+            //var bookImages = await _context.BookImages.Where(x => x.BookId == bookId).ToListAsync();
+            //return bookImages;
+            var cloudimage = await _context.Photos.Where(x => x.BookId == bookId).ToListAsync();
+            return cloudimage;
         }
 
+
+        
     }
 }

@@ -14,7 +14,7 @@ namespace ShoppingCart.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class MenusController : ControllerBase
     {
         private readonly IMenusRepository _menusRepository;
