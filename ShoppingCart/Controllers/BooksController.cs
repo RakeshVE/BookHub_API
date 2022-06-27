@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
@@ -22,6 +23,7 @@ namespace ShoppingCart.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly IBooksRepository _bookRepository;
@@ -46,8 +48,8 @@ namespace ShoppingCart.Controllers
             return Ok(books);
         }
 
-        [HttpPost("UploadBook")]       
-        public ActionResult UploadBook([FromForm] IFormFile file ,[FromQuery] BookDto book)
+        [HttpPost("UploadBook")]
+        public ActionResult UploadBook([FromForm] IFormFile file, [FromQuery] BookDto book)
         {
             try
             {
@@ -62,26 +64,26 @@ namespace ShoppingCart.Controllers
                 _bookRepository.UploadBook(book, file);
                 return Ok();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error:{ex}");
             }
-          
-            
-        }      
+
+
+        }
         [HttpGet("GetBookById")]
         public async Task<ActionResult> GetBookById(int id)
         {
             try
             {
-                if(id < 0)
+                if (id < 0)
                 {
                     return BadRequest("Invalid id");
                 }
                 var book = await _bookRepository.GetBookById(id);
                 return Ok(book);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex}");
             }
