@@ -23,7 +23,7 @@ namespace ShoppingCart.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly IBooksRepository _bookRepository;
@@ -88,7 +88,25 @@ namespace ShoppingCart.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
-   
+
+        [HttpGet("GetBookByMenuId")]
+        public async Task<ActionResult> GetBookByMenuId(int id)
+        {
+            try
+            {
+                if (id < 0)
+                {
+                    return BadRequest("Invalid id");
+                }
+                var book = await _bookRepository.GetBookByMenuId(id);
+                return Ok(book);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
 
 
         [HttpGet("GetBookImage")]

@@ -13,6 +13,7 @@ namespace ShoppingCart.Interfaces
         Task<IEnumerable<BookDto>> GetBook();
         void UploadBook(BookDto book, IFormFile formFile);
         Task<BookDto> GetBookById(int id);
+        Task<BookDto> GetBookByMenuId(int id);
 
         void UploadBookImage(BookImage bookImage);
         Task<IEnumerable<Photo>> GetBookImage(int bookId);

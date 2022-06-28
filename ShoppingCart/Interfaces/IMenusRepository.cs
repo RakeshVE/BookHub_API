@@ -11,6 +11,7 @@ namespace ShoppingCart.Interfaces
     {
         Task<IEnumerable<string>> GetMenus();
         Task<IEnumerable<string>> GetSubMenuByName(string menu);
-        Task<IEnumerable<Book>> GetBooksBySubMenu(string menu);
+        Task<IEnumerable<BookDto>> GetBooksBySubMenu(string menu);
+        Task<IEnumerable<BookDto>> GetBookByMenuId(int id);
     }
 }
