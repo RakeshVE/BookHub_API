@@ -1,3 +1,4 @@
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,22 @@ namespace ShoppingCart
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Cloudinary start
+            var cloudName = Configuration.GetValue<string>("AccountSettings:CloudName");
+            var apiKey = Configuration.GetValue<string>("AccountSettings:ApiKey");
+            var apiSecret = Configuration.GetValue<string>("AccountSettings:ApiSecret");
+
+            if (new[] { cloudName, apiKey, apiSecret }.Any(string.IsNullOrWhiteSpace))
+            {
+                throw new ArgumentException("Please specify Cloudinary account details!");
+            }
+
+            services.AddSingleton(new Cloudinary(new Account(cloudName, apiKey, apiSecret)));
+
+            var dbFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\Cloudinary\\samples";
+            System.IO.Directory.CreateDirectory(dbFolder);
+            //Cloudinary end
+
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMenusRepository, MenusRepository>();
@@ -51,7 +68,7 @@ namespace ShoppingCart
                  .AllowAnyHeader());
             });
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sample.FileUpload.Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Shopping Cart Api", Version = "v1" });
                 c.OperationFilter<SwaggerFileOperationFilter>();
             });
             services.AddSwaggerGen();
@@ -77,10 +94,8 @@ namespace ShoppingCart
             }
 
             app.UseRouting();
-            // app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
-            //  app.UseCors();
+            //  app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
             app.UseCors("CorsPolicy");
-
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseStaticFiles(new StaticFileOptions()

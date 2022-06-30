@@ -28,7 +28,9 @@ namespace ShoppingCart.Models
         public virtual DbSet<Menu> Menus { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<PaymentDetail> PaymentDetails { get; set; }
+        public virtual DbSet<Photo> Photos { get; set; }
         public virtual DbSet<Shipping> Shippings { get; set; }
+        public virtual DbSet<UploadResult> UploadResults { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Wishlist> Wishlists { get; set; }
 
@@ -347,6 +349,41 @@ namespace ShoppingCart.Models
                     .HasConstraintName("FK_PaymentDetails_Users");
             });
 
+            modelBuilder.Entity<Photo>(entity =>
+            {
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Format)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Path).HasMaxLength(500);
+
+                entity.Property(e => e.PublicId)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.ResourceType)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.SecureUrl)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.Signature)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasMaxLength(500);
+            });
+
             modelBuilder.Entity<Shipping>(entity =>
             {
                 entity.ToTable("Shipping");
@@ -384,6 +421,13 @@ namespace ShoppingCart.Models
                     .HasForeignKey(d => d.CheckoutId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Shipping_Checkout");
+            });
+
+            modelBuilder.Entity<UploadResult>(entity =>
+            {
+                entity.ToTable("UploadResult");
+
+                entity.Property(e => e.UploadResultAsJson).IsRequired();
             });
 
             modelBuilder.Entity<User>(entity =>

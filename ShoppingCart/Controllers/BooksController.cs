@@ -12,6 +12,12 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using System.Globalization;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using UploadResult = ShoppingCart.Models.UploadResult;
 
 namespace ShoppingCart.Controllers
 {
@@ -21,12 +27,18 @@ namespace ShoppingCart.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBooksRepository _bookRepository;
+        private readonly ShoppingCartContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private const string Tags = "backend_PhotoAlbum";
 
-        public BooksController(IBooksRepository booksRepository, IWebHostEnvironment hostEnvironment)
+        private readonly Cloudinary _cloudinary;
+
+        public BooksController(IBooksRepository booksRepository, IWebHostEnvironment hostEnvironment, Cloudinary cloudinary, ShoppingCartContext context)
         {
             _bookRepository = booksRepository;
             _webHostEnvironment = hostEnvironment;
+            _context = context;
+            _cloudinary = cloudinary;
         }
 
         [HttpGet]
@@ -76,54 +88,16 @@ namespace ShoppingCart.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
-
-        [HttpPost("UploadBookImage"), DisableRequestSizeLimit]
-        public async Task<IActionResult> UploadBookImage([FromForm] IFormFile files, [FromQuery] int bookId)
-        {
-            try
-            {
-                //var file = Request.Form.Files[0];
-                BookImage bookImage = new BookImage();
-                var folderName = Path.Combine("Resources", "Images");
-                var formCollection = await Request.ReadFormAsync();
-                var file = formCollection.Files.First();
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                if (file.Length > 0)
-                {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-                    bookImage.BookId = bookId;
-                    bookImage.ImageName = fileName;
-                    bookImage.ImageUrl = fullPath;
-                    _bookRepository.UploadBookImage(bookImage);
-                    return Ok(new { dbPath });
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}");
-            }
-        }
+   
 
 
         [HttpGet("GetBookImage")]
         public async Task<IActionResult> GetBookImage(int bookId)
         {
             try
-            {
-                // string uploadsFolder = Path.Combine(_webHostEnvironment.ContentRootPath, "Resource","Image");
+            {               
                 var booksImage = await _bookRepository.GetBookImage(bookId);
-                return Ok(booksImage);
-
+                return Ok(booksImage);                             
             }
 
             catch (Exception ex)
@@ -131,8 +105,64 @@ namespace ShoppingCart.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
 
+        }
+        [HttpPost("ImageUploadCloud")]
+        public async Task<IActionResult> ImageUploadCloud([FromForm] IFormFile image,int bookId)
+        {
+            var results = new List<Dictionary<string, string>>();
 
+            if (image == null || image.Length == 0)
+            {
+                return BadRequest("Server error");
+            }
 
+            IFormatProvider provider = CultureInfo.CreateSpecificCulture("en-US");
+            //foreach (var image in images)
+            //{
+                if (image.Length == 0) return BadRequest("Server error");
+
+                var result = await _cloudinary.UploadAsync(new ImageUploadParams
+                {
+                    File = new FileDescription(image.FileName,
+                        image.OpenReadStream()),
+                    Tags = Tags
+                }).ConfigureAwait(false);
+
+                var imageProperties = new Dictionary<string, string>();
+                foreach (var token in result.JsonObj.Children())
+                {
+                    if (token is JProperty prop)
+                    {
+                        imageProperties.Add(prop.Name, prop.Value.ToString());
+                    }
+                }
+
+                results.Add(imageProperties);
+
+                await _context.Photos.AddAsync(new Photo
+                {                    
+                    Bytes = (int)result.Bytes,
+                    CreatedAt = DateTime.Now,
+                    Format = result.Format,
+                    Height = result.Height,
+                    BookId=bookId,
+                    Path = result.Url.AbsolutePath,
+                    PublicId = result.PublicId,
+                    ResourceType = result.ResourceType,
+                    SecureUrl = result.SecureUrl.AbsoluteUri,
+                    Signature = result.Signature,
+                    Type = result.JsonObj["type"]?.ToString(),
+                    Url = result.Url.AbsoluteUri,
+                    Version = int.Parse(result.Version, provider),
+                    Width = result.Width
+                }).ConfigureAwait(false);
+          //  }
+
+            //await _context.UploadResults.AddAsync(new UploadResult { UploadResultAsJson = JsonConvert.SerializeObject(results),BookId=bookId }).ConfigureAwait(false);
+
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return Ok();
         }
 
     }

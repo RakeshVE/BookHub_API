@@ -15,7 +15,8 @@ namespace ShoppingCart.Interfaces
         Task<BookDto> GetBookById(int id);
 
         void UploadBookImage(BookImage bookImage);
-        Task<IEnumerable<BookImage>> GetBookImage(int bookId);
+        Task<IEnumerable<Photo>> GetBookImage(int bookId);
+      
 
     }
 }
