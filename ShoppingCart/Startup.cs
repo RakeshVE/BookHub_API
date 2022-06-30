@@ -59,6 +59,8 @@ namespace ShoppingCart
             services.AddScoped<IMenusRepository, MenusRepository>();
             services.AddScoped<IBooksRepository, BooksRepository>();
             services.AddScoped<IOrdersRepository, OrdersRepository>();
+            services.AddScoped<ICartRepositories, CartRepositories>();
+
             services.AddDbContext<ShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("myConnection")));
             services.AddControllers();
             // services.AddCors();

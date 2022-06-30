@@ -20,7 +20,7 @@ namespace ShoppingCart.DTOs
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
         public string Title { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
         public decimal OurPrice { get; set; }
 
 
