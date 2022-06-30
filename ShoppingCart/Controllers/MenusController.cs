@@ -39,11 +39,28 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpGet("GetBooksBySubMenu")]
-        public async Task<ActionResult<Book>> GetBooksBySubMenu(string menu)
+        public async Task<ActionResult<BookDto>> GetBooksBySubMenu(string menu)
         {
             var books = await _menusRepository.GetBooksBySubMenu(menu);
             return Ok(books);
         }
 
+        [HttpGet("GetBookByMenuId")]
+        public async Task<ActionResult> GetBookByMenuId(int id)
+        {
+            try
+            {
+                if (id < 0)
+                {
+                    return BadRequest("Invalid id");
+                }
+                var book = await _menusRepository.GetBookByMenuId(id);
+                return Ok(book);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
     }
 }

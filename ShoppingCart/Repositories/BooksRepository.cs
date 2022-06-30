@@ -131,9 +131,37 @@ namespace ShoppingCart.Repositories
                 _convImg.IsBook = true;
                 return _convImg;
             }
+            return _convImg;
+        }
 
-
-
+        public async Task<BookDto> GetBookByMenuId(int id)
+        {
+            var book = await _context.Books.Where(x => x.MenuId == id).SingleOrDefaultAsync();
+            BookDto _convImg = new BookDto();
+            if (book is not null)
+            {
+                if (book.Image != null)
+                {
+                    string imreBase64Data = Convert.ToBase64String(book.Image);
+                    string imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
+                    _convImg.Image = imgDataURL;
+                }
+                _convImg.BookId = book.BookId;
+                _convImg.Title = book.Title;
+                _convImg.ListPrice = book.ListPrice;
+                _convImg.OurPrice = book.OurPrice;
+                _convImg.Rating = book.Rating;
+                _convImg.ReviewCount = book.ReviewCount;
+                _convImg.Details = book.Details;
+                _convImg.ProductType = book.ProductType;
+                _convImg.Description = book.Description;
+                _convImg.SystemReq = book.SystemReq;
+                _convImg.Demo = book.Demo;
+                _convImg.IsActive = book.IsActive;
+                _convImg.MenuId = book.MenuId;
+                _convImg.IsBook = true;
+                return _convImg;
+            }
             return _convImg;
         }
 
