@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-#nullable disable
-
-namespace ShoppingCart.Models
+namespace ShoppingCart.DTOs
 {
-    public partial class Cart
+    public class CartDto
     {
-        public Cart()
-        {
-            Checkouts = new HashSet<Checkout>();
-        }
-
         public int CartId { get; set; }
         public int UserId { get; set; }
         public int BookId { get; set; }
@@ -25,14 +19,11 @@ namespace ShoppingCart.Models
         public int? CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
+        public string Title { get; set; }
+        public byte[] Image { get; set; }
+        public decimal OurPrice { get; set; }
 
-        public virtual Book Book { get; set; }
-        public virtual User User { get; set; }
-        public virtual ICollection<Checkout> Checkouts { get; set; }
 
-        public static explicit operator Cart(Task<List<Cart>> v)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

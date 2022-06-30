@@ -165,5 +165,91 @@ namespace ShoppingCart.Controllers
             return Ok();
         }
 
+        [HttpPost("AddToCart")]
+        public ActionResult AddToCart( [FromBody] cartReqDto cart)
+        {
+            try
+            {
+                if (cart is null)
+                {
+                    return BadRequest();
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+                _bookRepository.AddToCart(cart);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
+
+
+        }
+        [HttpGet("GetItemToCart")]
+        public async Task<ActionResult> GetItemToCart(int id)
+        {
+            try
+            {
+                if (id < 0)
+                {
+                    return BadRequest("Invalid id");
+                }
+                var book = _bookRepository.GetItemToCart(id);
+                return Ok(book);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+        [HttpPost("RemoveToCart")]
+        public ActionResult RemoveToCart([FromBody] cartReqDto cart)
+        {
+            try
+            {
+                if (cart is null)
+                {
+                    return BadRequest();
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+                _bookRepository.RemoveToCart(cart);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
+
+
+        }
+        [HttpPost("EmptyCart")]
+        public ActionResult EmptyCart([FromBody] cartReqDto cart)
+        {
+            try
+            {
+                if (cart is null)
+                {
+                    return BadRequest();
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+                _bookRepository.EmptyCart(cart);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
+
+
+        }
     }
 }

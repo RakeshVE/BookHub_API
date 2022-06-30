@@ -16,7 +16,11 @@ namespace ShoppingCart.Interfaces
 
         void UploadBookImage(BookImage bookImage);
         Task<IEnumerable<Photo>> GetBookImage(int bookId);
-      
+         void AddToCart(cartReqDto cart);
+        List<CartDto> GetItemToCart(int userId);
+
+        void RemoveToCart(cartReqDto cart);
+        void EmptyCart(cartReqDto cart);
 
     }
 }
