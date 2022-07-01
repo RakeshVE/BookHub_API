@@ -22,6 +22,7 @@ namespace ShoppingCart.DTOs
         public bool? IsActive { get; set; }
         public int MenuId { get; set; }
         public bool IsBook { get; set; }
+        public bool WishlistAdded{ get; set; }
         public string ContentType { get; set; }
         public string Certification { get; set; }
         public string Publisher { get; set; }

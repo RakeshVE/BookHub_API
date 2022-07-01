@@ -1,4 +1,5 @@
-﻿using ShoppingCart.DTOs;
+﻿using Microsoft.EntityFrameworkCore;
+using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
 using ShoppingCart.Models;
 using System;
@@ -17,7 +18,7 @@ namespace ShoppingCart.Repositories
             _context = context;
         }
 
-        public void AddToWishList(AddWishListDto wishlist)
+        public async Task AddToWishList(AddWishListDto wishlist)
         {
             var wishlistItem = new Wishlist
             {
@@ -28,16 +29,16 @@ namespace ShoppingCart.Repositories
                 CreatedBy = wishlist.CreatedBy
             };
             _context.Wishlists.Add(wishlistItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-        public List<WishlistItemDto> GetWishListItemByUserId(int userId)
+        public async Task<IEnumerable<WishlistItemDto>> GetWishListItemByUserId(int userId)
         {
             List<WishlistItemDto> _cart = new List<WishlistItemDto>();
             
-            _cart = (from c in _context.Wishlists
+            _cart = await(from c in _context.Wishlists
                      join b in _context.Books on c.BookId equals b.BookId
                      where c.UserId == userId
-                     select new WishlistItemDto
+                       select new WishlistItemDto
                      {
                          BookId=b.BookId,
                          Image= ToBase64String(b.Image),
@@ -45,7 +46,9 @@ namespace ShoppingCart.Repositories
                          ProductType=b.ProductType,
                          Price=b.OurPrice,
                          Rating=b.Rating                         
-                     }).ToList();
+                     }).ToListAsync();
+
+            
             return _cart;
         }
         public static string ToBase64String(byte[] inArray)

@@ -105,7 +105,7 @@ namespace ShoppingCart.Repositories
 
         public async Task<BookDto> GetBookById(int id)
         {
-            var book = await _context.Books.Where(x => x.BookId == id).SingleOrDefaultAsync();
+            var book = await _context.Books.Include(x => x.Wishlists).Where(x => x.BookId == id).FirstOrDefaultAsync();
             BookDto _convImg = new BookDto();
             if (book is not null)
             {
@@ -129,6 +129,11 @@ namespace ShoppingCart.Repositories
                 _convImg.IsActive = book.IsActive;
                 _convImg.MenuId = book.MenuId;
                 _convImg.IsBook = true;
+                if(book.Wishlists.Count == 0)
+                {
+                    _convImg.WishlistAdded = true;
+                }
+
                 return _convImg;
             }
             return _convImg;
