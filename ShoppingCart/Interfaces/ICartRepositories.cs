@@ -13,5 +13,6 @@ namespace ShoppingCart.Interfaces
 
         void RemoveToCart(cartReqDto cart);
         void EmptyCart(cartReqDto cart);
+        void UpdateCart(cartReqDto cart);
     }
 }

@@ -111,5 +111,28 @@ namespace ShoppingCart.Controllers
 
 
         }
+        [HttpPost("UpdateCart")]
+        public ActionResult UpdateCart([FromBody] cartReqDto cart)
+        {
+            try
+            {
+                if (cart is null)
+                {
+                    return BadRequest();
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+                _cartRepositories.UpdateCart(cart);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
+
+
+        }
     }
 }

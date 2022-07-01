@@ -90,7 +90,7 @@ namespace ShoppingCart.Repositories
                          UserId = c.UserId,
                          BookId = c.BookId,
                          Quantity = c.Quantity,
-                         CartTotal = c.CartTotal,
+                         CartTotal = c.Quantity*b.OurPrice,
                          DiscountPer = c.DiscountPer,
                          NetPay = c.NetPay,
                          IsActive = c.IsActive,
@@ -115,6 +115,24 @@ namespace ShoppingCart.Repositories
                     _context.Carts.Update(item);
                     _context.SaveChanges();
                 }
+
+
+            }
+        }
+        public void UpdateCart(cartReqDto cart)
+        {
+            Cart _cart = new Cart();
+            if (cart != null)
+            {
+                _cart = _context.Carts.Where(x => x.UserId == cart.UserId && x.BookId == cart.BookId).FirstOrDefault();
+
+
+                _cart.Quantity = cart.Quantity;
+                _cart.ModifiedOn = DateTime.Now;
+                _cart.ModifiedBy = 1;
+                    _context.Carts.Update(_cart);
+                    _context.SaveChanges();
+                
 
 
             }
