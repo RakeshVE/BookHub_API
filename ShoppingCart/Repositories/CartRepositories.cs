@@ -26,7 +26,7 @@ namespace ShoppingCart.Repositories
                 if (_cartchk != null)
                 {
                     _cartchk.IsActive = true;
-
+                    _cartchk.Quantity = cart.Quantity;
                     _cartchk.ModifiedOn = DateTime.Now;
                     _cartchk.ModifiedBy = 1;
                     _context.Carts.Update(_cartchk);
