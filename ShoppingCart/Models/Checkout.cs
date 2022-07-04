@@ -17,7 +17,7 @@ namespace ShoppingCart.Models
 
         public int CheckoutId { get; set; }
         public int? CouponId { get; set; }
-        public int CartId { get; set; }
+        public int UserId { get; set; }
         public decimal Tax { get; set; }
         public decimal Shipping { get; set; }
         public decimal FinalPay { get; set; }
@@ -26,8 +26,8 @@ namespace ShoppingCart.Models
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
 
-        public virtual Cart Cart { get; set; }
         public virtual Coupon Coupon { get; set; }
+        public virtual Cart User { get; set; }
         public virtual ICollection<Billing> Billings { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<PaymentDetail> PaymentDetails { get; set; }

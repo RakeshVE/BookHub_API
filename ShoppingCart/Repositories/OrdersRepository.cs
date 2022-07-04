@@ -67,8 +67,8 @@ namespace ShoppingCart.Repositories
                     ZipCode = shipping.ZipCode,
                     Phone = shipping.Phone,
                     AddressType = shipping.AddressType,
-                    CreatedOn = shipping.CreatedOn,
-                    CreatedBy = shipping.CreatedBy
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = 1
                 };
 
                 _context.Shippings.Add(shippingDetails);
@@ -79,9 +79,41 @@ namespace ShoppingCart.Repositories
 
             }
             
-             
-            
         }
+
+        public async Task CheckOut(decimal totalOrder)
+        {
+            try
+            {
+                decimal tax = .18m;
+                decimal shippingFee = 50.00m;
+                decimal totalTax = totalOrder * (tax);
+                decimal total = totalOrder + totalTax;
+                CheckOutDto checkOutDto = new CheckOutDto();
+
+                var checkout = new Checkout 
+                {
+                    CouponId = null,
+                    UserId = 1,
+                    Tax = totalTax,
+                    Shipping = shippingFee,
+                    FinalPay = total+ shippingFee,
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = 1
+
+                };
+                _context.Checkouts.Add(checkout);
+                await _context.SaveChangesAsync();
+                
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+        }
+
+       
         public static string ToBase64String(byte[] inArray)
         {
             string imgbase64 = "";

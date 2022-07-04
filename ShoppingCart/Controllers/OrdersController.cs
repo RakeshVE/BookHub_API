@@ -83,5 +83,29 @@ namespace ShoppingCart.Controllers
                 return StatusCode(500, $"Internal server error:{ex}");
             }
         }
+
+        [HttpPost("Checkout")]
+        public async Task<ActionResult> Checkout([FromBody]int orderTotal)
+        {
+            try
+            {
+                if (orderTotal ==0)
+                {
+                    return BadRequest();
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+                await _ordersRepository.CheckOut(orderTotal);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
+        }
+
+        
     }
 }

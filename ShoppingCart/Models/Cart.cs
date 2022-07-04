@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 #nullable disable
 
@@ -16,8 +15,8 @@ namespace ShoppingCart.Models
         public int CartId { get; set; }
         public int UserId { get; set; }
         public int BookId { get; set; }
-        public int? Quantity { get; set; }
-        public int? CartTotal { get; set; }
+        public int Quantity { get; set; }
+        public int CartTotal { get; set; }
         public decimal? DiscountPer { get; set; }
         public decimal NetPay { get; set; }
         public bool? IsActive { get; set; }
@@ -29,10 +28,5 @@ namespace ShoppingCart.Models
         public virtual Book Book { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<Checkout> Checkouts { get; set; }
-
-        public static explicit operator Cart(Task<List<Cart>> v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

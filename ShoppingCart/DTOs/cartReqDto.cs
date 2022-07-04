@@ -10,8 +10,8 @@ namespace ShoppingCart.DTOs
         public int? CartId { get; set; }
         public int UserId { get; set; }
         public int BookId { get; set; }
-        public int? Quantity { get; set; }
-        public int? CartTotal { get; set; }
+        public int Quantity { get; set; }
+        public int CartTotal { get; set; }
         public decimal? DiscountPer { get; set; }
         public decimal NetPay { get; set; }
         public bool? IsActive { get; set; }

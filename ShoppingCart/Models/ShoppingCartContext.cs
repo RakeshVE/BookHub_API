@@ -38,7 +38,8 @@ namespace ShoppingCart.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=VE03042022AJ63;Database=ShoppingCart;Trusted_Connection=True;");
             }
         }
 
@@ -164,16 +165,16 @@ namespace ShoppingCart.Models
 
                 entity.Property(e => e.Tax).HasColumnType("decimal(18, 0)");
 
-                entity.HasOne(d => d.Cart)
-                    .WithMany(p => p.Checkouts)
-                    .HasForeignKey(d => d.CartId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Checkout_Cart");
-
                 entity.HasOne(d => d.Coupon)
                     .WithMany(p => p.Checkouts)
                     .HasForeignKey(d => d.CouponId)
                     .HasConstraintName("FK_Checkout_Coupon");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Checkouts)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Checkout_Cart");
             });
 
             modelBuilder.Entity<CorpSale>(entity =>

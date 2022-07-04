@@ -12,5 +12,8 @@ namespace ShoppingCart.Interfaces
         Task<IEnumerable<WishlistItemDto>> GetWishListItemByUserId(int userId);
         Task AddToWishList(AddWishListDto wishlist);
         Task AddShippingDetails(ShippingDto shipping);
+        Task CheckOut(decimal totalOrder);
+
+
     }
 }
