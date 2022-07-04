@@ -61,5 +61,27 @@ namespace ShoppingCart.Controllers
             }
 
         }
+
+        [HttpPost("ShippingDetails")]
+        public async Task<ActionResult> ShippingDetails([FromQuery] ShippingDto shipping)
+        {
+            try
+            {
+                if (shipping is null)
+                {
+                    return BadRequest();
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+                await _ordersRepository.AddShippingDetails(shipping);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
+        }
     }
 }

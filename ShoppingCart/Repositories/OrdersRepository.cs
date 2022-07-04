@@ -51,6 +51,37 @@ namespace ShoppingCart.Repositories
             
             return _cart;
         }
+        public async Task AddShippingDetails(ShippingDto shipping)
+        {
+            try
+            {
+                var shippingDetails = new Shipping
+                {
+                    CheckoutId = shipping.CheckoutId,
+                    FirstName = shipping.FirstName,
+                    LastName = shipping.LastName,
+                    Address = shipping.Address,
+                    City = shipping.City,
+                    State = shipping.State,
+                    Country = shipping.Country,
+                    ZipCode = shipping.ZipCode,
+                    Phone = shipping.Phone,
+                    AddressType = shipping.AddressType,
+                    CreatedOn = shipping.CreatedOn,
+                    CreatedBy = shipping.CreatedBy
+                };
+
+                _context.Shippings.Add(shippingDetails);
+                await _context.SaveChangesAsync();
+            } 
+            catch(Exception ex)
+            {
+
+            }
+            
+             
+            
+        }
         public static string ToBase64String(byte[] inArray)
         {
             string imgbase64 = "";
@@ -62,6 +93,8 @@ namespace ShoppingCart.Repositories
             }
             return imgbase64;
         }
+
+        
 
     }
 }
