@@ -8,11 +8,11 @@ namespace ShoppingCart.Interfaces
 {
    public interface ICartRepositories
     {
-        void AddToCart(cartReqDto cart);
-        List<CartDto> GetItemToCart(int userId);
+        Task AddToCart(cartReqDto cart);
+        Task<IEnumerable<CartDto>> GetItemToCart(int userId);
 
-        void RemoveToCart(cartReqDto cart);
-        void EmptyCart(cartReqDto cart);
-        void UpdateCart(cartReqDto cart);
+        Task RemoveToCart(cartReqDto cart);
+        Task EmptyCart(cartReqDto cart);
+        Task UpdateCart(cartReqDto cart);
     }
 }

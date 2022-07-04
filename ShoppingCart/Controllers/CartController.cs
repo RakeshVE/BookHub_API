@@ -26,7 +26,7 @@ namespace ShoppingCart.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
         [HttpPost("AddToCart")]
-        public ActionResult AddToCart([FromBody] cartReqDto cart)
+        public async Task<ActionResult> AddToCart([FromBody] cartReqDto cart)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid model object");
                 }
-                _cartRepositories.AddToCart(cart);
+              await  _cartRepositories.AddToCart(cart);
                 return Ok();
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid id");
                 }
-                var book = _cartRepositories.GetItemToCart(id);
+                var book = await _cartRepositories.GetItemToCart(id);
                 return Ok(book);
             }
             catch (Exception ex)
@@ -66,7 +66,7 @@ namespace ShoppingCart.Controllers
             }
         }
         [HttpPost("RemoveToCart")]
-        public ActionResult RemoveToCart([FromBody] cartReqDto cart)
+        public async Task<ActionResult> RemoveToCart([FromBody] cartReqDto cart)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid model object");
                 }
-                _cartRepositories.RemoveToCart(cart);
+                await _cartRepositories.RemoveToCart(cart);
                 return Ok();
             }
             catch (Exception ex)
@@ -89,7 +89,7 @@ namespace ShoppingCart.Controllers
 
         }
         [HttpPost("EmptyCart")]
-        public ActionResult EmptyCart([FromBody] cartReqDto cart)
+        public async Task<ActionResult> EmptyCart([FromBody] cartReqDto cart)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid model object");
                 }
-                _cartRepositories.EmptyCart(cart);
+                await _cartRepositories.EmptyCart(cart);
                 return Ok();
             }
             catch (Exception ex)
@@ -112,7 +112,7 @@ namespace ShoppingCart.Controllers
 
         }
         [HttpPost("UpdateCart")]
-        public ActionResult UpdateCart([FromBody] cartReqDto cart)
+        public async Task<ActionResult> UpdateCart([FromBody] cartReqDto cart)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid model object");
                 }
-                _cartRepositories.UpdateCart(cart);
+                await _cartRepositories.UpdateCart(cart);
                 return Ok();
             }
             catch (Exception ex)
