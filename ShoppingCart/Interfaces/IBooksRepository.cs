@@ -17,7 +17,7 @@ namespace ShoppingCart.Interfaces
 
         void UploadBookImage(BookImage bookImage);
         Task<IEnumerable<Photo>> GetBookImage(int bookId);
-      
+        
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
@@ -22,7 +23,7 @@ namespace ShoppingCart.Repositories
             _mapper = mapper;
         }
 
-        public void AddToWishList(AddWishListDto wishlist)
+        public async Task AddToWishList(AddWishListDto wishlist)
         {
             var wishlistItem = new Wishlist
             {
@@ -33,16 +34,16 @@ namespace ShoppingCart.Repositories
                 CreatedBy = wishlist.CreatedBy
             };
             _context.Wishlists.Add(wishlistItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-        public List<WishlistItemDto> GetWishListItemByUserId(int userId)
+        public async Task<IEnumerable<WishlistItemDto>> GetWishListItemByUserId(int userId)
         {
             List<WishlistItemDto> _cart = new List<WishlistItemDto>();
             
-            _cart = (from c in _context.Wishlists
+            _cart = await(from c in _context.Wishlists
                      join b in _context.Books on c.BookId equals b.BookId
                      where c.UserId == userId
-                     select new WishlistItemDto
+                       select new WishlistItemDto
                      {
                          BookId=b.BookId,
                          Image= ToBase64String(b.Image),
@@ -50,8 +51,41 @@ namespace ShoppingCart.Repositories
                          ProductType=b.ProductType,
                          Price=b.OurPrice,
                          Rating=b.Rating                         
-                     }).ToList();
+                     }).ToListAsync();
+
+            
             return _cart;
+        }
+        public async Task AddShippingDetails(ShippingDto shipping)
+        {
+            try
+            {
+                var shippingDetails = new Shipping
+                {
+                    CheckoutId = shipping.CheckoutId,
+                    FirstName = shipping.FirstName,
+                    LastName = shipping.LastName,
+                    Address = shipping.Address,
+                    City = shipping.City,
+                    State = shipping.State,
+                    Country = shipping.Country,
+                    ZipCode = shipping.ZipCode,
+                    Phone = shipping.Phone,
+                    AddressType = shipping.AddressType,
+                    CreatedOn = shipping.CreatedOn,
+                    CreatedBy = shipping.CreatedBy
+                };
+
+                _context.Shippings.Add(shippingDetails);
+                await _context.SaveChangesAsync();
+            } 
+            catch(Exception ex)
+            {
+
+            }
+            
+             
+            
         }
 
         public async Task<List<OrderDetailDto>> GetOrdersAsync()
@@ -144,6 +178,8 @@ namespace ShoppingCart.Repositories
             }
             return imgbase64;
         }
+
+        
 
     }
 }

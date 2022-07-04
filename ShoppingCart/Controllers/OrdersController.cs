@@ -20,7 +20,7 @@ namespace ShoppingCart.Controllers
             _ordersRepository = ordersRepository;
         }
         [HttpPost("AddBookToWishlist")]
-        public ActionResult AddBookToWishlist([FromBody]AddWishListDto wishlist)
+        public async Task<ActionResult> AddBookToWishlist([FromBody]AddWishListDto wishlist)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid model object");
                 }
-                _ordersRepository.AddToWishList(wishlist);
+                await _ordersRepository.AddToWishList(wishlist);
                 return Ok();
             }
             catch (Exception ex)
@@ -43,7 +43,7 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpGet("GetWishListItem")]
-        public ActionResult GetWishListItem( int userId)
+        public async Task<ActionResult> GetWishListItem( int userId)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace ShoppingCart.Controllers
                     return BadRequest();
                 }
                 
-              var wishListItem=  _ordersRepository.GetWishListItemByUserId(userId);
+              var wishListItem= await _ordersRepository.GetWishListItemByUserId(userId);
                 return Ok(wishListItem);
             }
             catch (Exception ex)
@@ -60,6 +60,28 @@ namespace ShoppingCart.Controllers
                 return StatusCode(500, $"Internal server error:{ex}");
             }
 
+        }
+
+        [HttpPost("ShippingDetails")]
+        public async Task<ActionResult> ShippingDetails([FromQuery] ShippingDto shipping)
+        {
+            try
+            {
+                if (shipping is null)
+                {
+                    return BadRequest();
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+                await _ordersRepository.AddShippingDetails(shipping);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
         }
 
         [HttpGet("")]

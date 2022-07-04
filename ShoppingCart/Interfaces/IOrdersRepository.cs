@@ -9,6 +9,9 @@ namespace ShoppingCart.Interfaces
 {
     public interface IOrdersRepository
     {
+        Task<IEnumerable<WishlistItemDto>> GetWishListItemByUserId(int userId);
+        Task AddToWishList(AddWishListDto wishlist);
+        Task AddShippingDetails(ShippingDto shipping);
         List<WishlistItemDto> GetWishListItemByUserId(int userId);
         void AddToWishList(AddWishListDto wishlist);
         Task<List<OrderDetailDto>> GetOrdersAsync();
