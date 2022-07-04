@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 #nullable disable
 
@@ -45,5 +46,10 @@ namespace ShoppingCart.Models
         public virtual ICollection<CustomerReview> CustomerReviews { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Wishlist> Wishlists { get; set; }
+
+        public static explicit operator Book(Task<List<Book>> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

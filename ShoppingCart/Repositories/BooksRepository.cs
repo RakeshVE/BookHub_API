@@ -184,7 +184,6 @@ namespace ShoppingCart.Repositories
             return cloudimage;
         }
 
-
-        
+      
     }
 }

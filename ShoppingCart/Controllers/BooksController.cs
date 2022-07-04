@@ -23,7 +23,7 @@ namespace ShoppingCart.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize]
+    //[Authorize]
     public class BooksController : ControllerBase
     {
         private readonly IBooksRepository _bookRepository;
@@ -183,5 +183,6 @@ namespace ShoppingCart.Controllers
             return Ok();
         }
 
+        
     }
 }
