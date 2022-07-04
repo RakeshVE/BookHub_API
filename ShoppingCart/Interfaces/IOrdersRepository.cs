@@ -11,5 +11,12 @@ namespace ShoppingCart.Interfaces
     {
         List<WishlistItemDto> GetWishListItemByUserId(int userId);
         void AddToWishList(AddWishListDto wishlist);
+        Task<List<OrderDetailDto>> GetOrdersAsync();
+        Task<OrderDetailDto> GetOrderByIdAsync(int id);
+        Task<int> AddOrderAsync(OrderDetailDto orderdto);
+        Task UpdateOrderAsync(int id, OrderDetailDto orderdto);
+        //Task UpdateOrderPatchAsync(int id, JsonPatchDocument orderdto);
+        Task DeleteOrderAsync(int id);
+        Task <List<OrderStatusDto>> GetOrdersStatus();
     }
 }

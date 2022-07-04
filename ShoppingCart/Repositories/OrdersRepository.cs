@@ -1,4 +1,6 @@
-﻿using ShoppingCart.DTOs;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
 using ShoppingCart.Models;
 using System;
@@ -11,10 +13,13 @@ namespace ShoppingCart.Repositories
     public class OrdersRepository: IOrdersRepository
     {
         private readonly ShoppingCartContext _context;
+        private readonly IMapper _mapper;
 
-        public OrdersRepository(ShoppingCartContext context)
+
+        public OrdersRepository(ShoppingCartContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public void AddToWishList(AddWishListDto wishlist)
@@ -48,6 +53,86 @@ namespace ShoppingCart.Repositories
                      }).ToList();
             return _cart;
         }
+
+        public async Task<List<OrderDetailDto>> GetOrdersAsync()
+        {
+
+            var orderdetail = await _context.OrderDetails.ToListAsync();
+            return _mapper.Map<List<OrderDetailDto>>(orderdetail);
+        }
+
+        public async Task<OrderDetailDto> GetOrderByIdAsync(int id)
+        {
+            var orderdetail = await _context.OrderDetails.FindAsync(id);
+            return _mapper.Map<OrderDetailDto>(orderdetail);
+
+        }
+
+
+        public async Task<int> AddOrderAsync(OrderDetailDto orderdto)
+        {
+            var addorder = new OrderDetail()
+            {
+                OrderId = orderdto.OrderId,
+                CheckoutId = orderdto.CheckoutId,
+                BookId = orderdto.BookId,
+                CreatedOn = orderdto.CreatedOn,
+                CreatedBy = orderdto.CreatedBy,
+                ModifiedOn = orderdto.ModifiedOn,
+                ModifiedBy = orderdto.ModifiedBy
+            };
+            _context.OrderDetails.Add(addorder);
+            await _context.SaveChangesAsync();
+            return addorder.OrderId;
+        }
+
+        public async Task UpdateOrderAsync(int id, OrderDetailDto orderdto)
+        {
+            var orderdetail = await _context.OrderDetails.FindAsync(id);
+            if (orderdetail != null)
+            {
+                orderdetail.CheckoutId = orderdto.CheckoutId;
+                orderdetail.BookId = orderdto.BookId;
+                orderdetail.CreatedOn = orderdto.CreatedOn;
+                orderdetail.CreatedBy = orderdto.CreatedBy;
+                orderdetail.ModifiedOn = orderdto.ModifiedOn;
+                orderdetail.ModifiedBy = orderdto.ModifiedBy;
+                await _context.SaveChangesAsync();
+            }
+
+        }
+
+
+
+        public async Task DeleteOrderAsync(int id)
+        {
+            var orderdetail = new OrderDetail() { OrderId = id };
+            _context.OrderDetails.Remove(orderdetail);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<OrderStatusDto>> GetOrdersStatus()
+        {
+            var orderList = (from b in _context.Books
+                             join o in _context.OrderDetails on b.BookId equals o.BookId
+                             join i in _context.BookImages on b.BookId equals i.BookId
+                             select new OrderStatusDto()
+                             {
+                                 OrderId = o.OrderId,
+                                 CheckoutId = o.CheckoutId,
+                                 BookId = b.BookId,
+                                 Title = b.Title,
+                                 ListPrice = b.ListPrice,
+                                 OurPrice = b.OurPrice,
+                                 ProductType = b.ProductType,
+                                 ImageUrl = ToBase64String(b.Image),
+                                 ImageName = i.ImageName,
+                                 CreatedBy = o.CreatedBy,
+                                 ModifiedBy = o.ModifiedBy
+                             }).ToListAsync ();
+             return await orderList;
+        }
+
         public static string ToBase64String(byte[] inArray)
         {
             string imgbase64 = "";
