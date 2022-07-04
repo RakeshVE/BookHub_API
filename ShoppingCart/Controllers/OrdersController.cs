@@ -84,6 +84,50 @@ namespace ShoppingCart.Controllers
             }
         }
 
+        [HttpGet("")]
+        public async Task<IActionResult> GetOrders()
+        {
+            var orderdetail = await _ordersRepository.GetOrdersAsync();
+            return Ok(orderdetail);
+        }
+
+        [HttpGet("GetOrderStatus")]
+        public async Task<IActionResult> GetOrderStatus()
+        {
+            var orders = await _ordersRepository.GetOrdersStatus();
+            return Ok(orders);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOrderById([FromRoute] int id)
+        {
+            var orderdetail = await _ordersRepository.GetOrderByIdAsync(id);
+            if (orderdetail == null)
+            {
+                return NotFound();
+            }
+            return Ok(orderdetail);
+        }
+
+        [HttpPost("")]
+        public async Task<IActionResult> AddOrder([FromBody] OrderDetailDto orderdto)
+        {
+            var orderdetail = await _ordersRepository.AddOrderAsync(orderdto);
+            return CreatedAtAction(nameof(GetOrderById), new { id = orderdetail, Controller = "OrderDetail" }, orderdto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder([FromBody] OrderDetailDto orderdto, [FromRoute] int id)
+        {
+            await _ordersRepository.UpdateOrderAsync(id, orderdto);
+            return Ok();
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder([FromRoute] int id)
+        {
+            await _ordersRepository.DeleteOrderAsync(id);
+            return Ok();
+        }
+
         [HttpPost("Checkout")]
         public async Task<ActionResult> Checkout([FromBody]int orderTotal)
         {

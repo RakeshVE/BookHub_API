@@ -61,9 +61,10 @@ namespace ShoppingCart
             services.AddScoped<IOrdersRepository, OrdersRepository>();
             services.AddScoped<ICartRepositories, CartRepositories>();
 
+            services.AddScoped<ICorpSalesRepository, CorpSalesRepository>();
             services.AddDbContext<ShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("myConnection")));
             services.AddControllers();
-            // services.AddCors();
+            //services.AddCors();
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin()
@@ -86,6 +87,7 @@ namespace ShoppingCart
                         ValidateAudience = false
                     };
                 });
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
