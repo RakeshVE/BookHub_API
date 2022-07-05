@@ -63,7 +63,7 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpPost("ShippingDetails")]
-        public async Task<ActionResult> ShippingDetails([FromQuery] ShippingDto shipping)
+        public async Task<ActionResult> ShippingDetails([FromBody] ShippingDto shipping)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpPost("Checkout")]
-        public async Task<ActionResult> Checkout([FromBody]int orderTotal)
+        public async Task<ActionResult<CheckOutDto>> Checkout([FromBody]int orderTotal)
         {
             try
             {
@@ -141,8 +141,8 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid model object");
                 }
-                await _ordersRepository.CheckOut(orderTotal);
-                return Ok();
+                var data = await _ordersRepository.CheckOut(orderTotal);
+                return Ok(data);
             }
             catch (Exception ex)
             {

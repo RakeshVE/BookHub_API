@@ -19,7 +19,7 @@ namespace ShoppingCart.Interfaces
         //Task UpdateOrderPatchAsync(int id, JsonPatchDocument orderdto);
         Task DeleteOrderAsync(int id);
         Task <List<OrderStatusDto>> GetOrdersStatus();
-        Task CheckOut(decimal totalOrder);
+        Task<CheckOutDto> CheckOut(decimal totalOrder);
 
 
     }

@@ -68,7 +68,7 @@ namespace ShoppingCart.Repositories
                     ZipCode = shipping.ZipCode,
                     Phone = shipping.Phone,
                     AddressType = shipping.AddressType,
-                    CreatedOn = shipping.CreatedOn,
+                    CreatedOn = DateTime.Now,
                     CreatedBy = shipping.CreatedBy
                 };
                 _context.Shippings.Add(shippingDetails);
@@ -147,7 +147,7 @@ namespace ShoppingCart.Repositories
             return await orderList;
         }
 
-        public async Task CheckOut(decimal totalOrder)
+        public async Task<CheckOutDto> CheckOut(decimal totalOrder)
         {
             try
             {
@@ -155,7 +155,6 @@ namespace ShoppingCart.Repositories
                 decimal shippingFee = 50.00m;
                 decimal totalTax = totalOrder * (tax);
                 decimal total = totalOrder + totalTax;
-                CheckOutDto checkOutDto = new CheckOutDto();
 
                 var checkout = new Checkout
                 {
@@ -171,10 +170,24 @@ namespace ShoppingCart.Repositories
                 _context.Checkouts.Add(checkout);
                 await _context.SaveChangesAsync();
 
+                CheckOutDto checkOutDto = new CheckOutDto
+                {
+                    CouponId = checkout.CouponId,
+                    CreatedBy = checkout.CreatedBy,
+                    CreatedOn = checkout.CreatedOn,
+                    FinalPay = checkout.FinalPay,
+                    Shipping = checkout.Shipping,
+                    Tax = checkout.Tax,
+                    UserId = checkout.UserId,
+                    CheckoutId = checkout.CheckoutId
+            };
+
+                return checkOutDto;
+
             }
             catch (Exception ex)
             {
-
+                throw ex;
             }
 
         }

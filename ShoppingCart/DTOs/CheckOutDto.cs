@@ -7,8 +7,9 @@ namespace ShoppingCart.DTOs
 {
     public class CheckOutDto
     {
+        public int CheckoutId { get; set; }
         public int? CouponId { get; set; }
-        public int CartId { get; set; }
+        public int UserId { get; set; }
         public decimal Tax { get; set; }
         public decimal Shipping { get; set; }
         public decimal FinalPay { get; set; }
