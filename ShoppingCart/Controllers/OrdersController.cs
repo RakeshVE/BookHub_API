@@ -15,9 +15,11 @@ namespace ShoppingCart.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrdersRepository _ordersRepository;
-        public OrdersController(IOrdersRepository ordersRepository)
+        private readonly ILoggerManager _loggerManager;
+        public OrdersController(IOrdersRepository ordersRepository,ILoggerManager loggerManager)
         {
             _ordersRepository = ordersRepository;
+            _loggerManager = loggerManager;
         }
         [HttpPost("AddBookToWishlist")]
         public async Task<ActionResult> AddBookToWishlist([FromBody]AddWishListDto wishlist)
@@ -37,6 +39,7 @@ namespace ShoppingCart.Controllers
             }
             catch (Exception ex)
             {
+                _loggerManager.LogError($"Something went wrong inside AddBookToWishlist action: {ex.Message}");
                 return StatusCode(500, $"Internal server error:{ex}");
             }
 
@@ -57,6 +60,7 @@ namespace ShoppingCart.Controllers
             }
             catch (Exception ex)
             {
+                _loggerManager.LogError($"Something went wrong inside AddBookToWishlist action: {ex.Message}");
                 return StatusCode(500, $"Internal server error:{ex}");
             }
 
@@ -80,6 +84,7 @@ namespace ShoppingCart.Controllers
             }
             catch (Exception ex)
             {
+                _loggerManager.LogError($"Something went wrong inside AddBookToWishlist action: {ex.Message}");
                 return StatusCode(500, $"Internal server error:{ex}");
             }
         }

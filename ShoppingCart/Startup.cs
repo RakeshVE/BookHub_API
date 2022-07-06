@@ -12,8 +12,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NLog;
 using ShoppingCart.Helpers;
 using ShoppingCart.Interfaces;
+using ShoppingCart.Logger;
 using ShoppingCart.Models;
 using ShoppingCart.Repositories;
 using ShoppingCart.Services;
@@ -30,6 +32,7 @@ namespace ShoppingCart
     {
         public Startup(IConfiguration configuration)
         {
+            LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -60,7 +63,7 @@ namespace ShoppingCart
             services.AddScoped<IBooksRepository, BooksRepository>();
             services.AddScoped<IOrdersRepository, OrdersRepository>();
             services.AddScoped<ICartRepositories, CartRepositories>();
-
+            services.AddSingleton<ILoggerManager, LoggerService>();
             services.AddScoped<ICorpSalesRepository, CorpSalesRepository>();
             services.AddDbContext<ShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("myConnection")));
             services.AddControllers();
