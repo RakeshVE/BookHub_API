@@ -114,12 +114,14 @@ namespace ShoppingCart.Repositories
 
             _cart = await (from c in _context.Carts
                      join b in _context.Books on c.BookId equals b.BookId
+                     join d in _context.Users on userId equals d.UserId
                      where c.UserId == userId
                      where c.IsActive == true
                      select new CartDto
                      {
                          CartId = c.CartId,
                          UserId = c.UserId,
+                         Username = d.FirstName + " " + d.LastName,
                          BookId = c.BookId,
                          Quantity = c.Quantity,
                          CartTotal = c.Quantity * b.OurPrice,
@@ -128,7 +130,8 @@ namespace ShoppingCart.Repositories
                          IsActive = c.IsActive,
                          Title = b.Title,
                          Image = ToBase64String(b.Image),
-                         OurPrice = b.OurPrice
+                         OurPrice = b.OurPrice,
+                         CreatedOn = c.CreatedOn
                      }).ToListAsync();
             return _cart;
         }
