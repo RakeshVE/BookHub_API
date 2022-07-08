@@ -31,6 +31,10 @@ namespace ShoppingCart.Repositories
                     _cartchk.Quantity = cart.Quantity;
                     _cartchk.ModifiedOn = DateTime.Now;
                     _cartchk.ModifiedBy = 1;
+                    _cartchk.CartTotal = cart.CartTotal;
+                    _cartchk.DiscountPer = cart.DiscountPer;
+                    _cartchk.NetPay = cart.NetPay;
+
                     _context.Carts.Update(_cartchk);
                      _context.SaveChanges();
                 }
@@ -43,6 +47,7 @@ namespace ShoppingCart.Repositories
                     _cart.CartTotal = cart.CartTotal;
                     _cart.DiscountPer = cart.DiscountPer;
                     _cart.NetPay = cart.NetPay;
+
                     _cart.IsActive = true;
 
                     _cart.CreatedOn = DateTime.Now;
