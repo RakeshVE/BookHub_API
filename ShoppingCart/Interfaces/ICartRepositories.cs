@@ -12,7 +12,7 @@ namespace ShoppingCart.Interfaces
         Task<IEnumerable<CartDto>> GetItemToCart(int userId);
 
         Task RemoveToCart(cartReqDto cart);
-        Task EmptyCart(cartReqDto cart);
+        Task EmptyCart(int userId);
         Task UpdateCart(cartReqDto cart);
     }
 }

@@ -296,6 +296,8 @@ namespace ShoppingCart.Models
 
                 entity.Property(e => e.Status).HasMaxLength(50);
 
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
+
                 entity.HasOne(d => d.Book)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.BookId)

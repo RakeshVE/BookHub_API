@@ -211,6 +211,8 @@ namespace ShoppingCart.Repositories
 
             for (int i = 0; i < length; i++)
             {
+                var cart = _context.Carts.Where(x => x.UserId == userId && x.IsActive == true && x.BookId == bookId[i]).FirstOrDefault();
+
                 OrderDetail orderDetail = new OrderDetail
                 {
                     OrderId = checkoutId,
@@ -218,6 +220,8 @@ namespace ShoppingCart.Repositories
                     BookId = bookId[i],
                     UserId = userId,
                     Status = "Placed",
+                    Quantity = cart.Quantity,
+                    Price = (cart.NetPay * cart.Quantity * 1.18m) + 50,
                     CreatedOn = DateTime.Now,
                     CreatedBy = userId
                 };
