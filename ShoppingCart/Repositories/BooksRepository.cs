@@ -221,11 +221,14 @@ namespace ShoppingCart.Repositories
                 var book = await _context.Books.ToListAsync();
                 return book;
             }
-            else 
-            {
-                var book = await _context.Books.Where(x => x.Certification == filterResults.Certifications || x.ContentType == filterResults.ContentType ||
-                               x.Publisher == filterResults.Publishers || x.OurPrice >= minValue && x.OurPrice <= maxValue).ToListAsync();
-                return book;
+            else
+            {            
+                var book = await _context.Books.Where(x => (string.IsNullOrWhiteSpace(filterResults.Certifications) || x.Certification == filterResults.Certifications) && 
+                (string.IsNullOrWhiteSpace(filterResults.ContentType) || x.ContentType == filterResults.ContentType)
+                && ( string.IsNullOrWhiteSpace(filterResults.Publishers) || x.Publisher == filterResults.Publishers)&& (minValue == 0 || x.OurPrice >= minValue)
+                && (maxValue == 0 || x.OurPrice <= maxValue)).ToListAsync();
+
+                 return book;
 
             }
 
