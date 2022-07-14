@@ -20,7 +20,8 @@ namespace ShoppingCart.Interfaces
         Task DeleteOrderAsync(int id);
         Task <List<OrderStatusDto>> GetOrdersStatus();
         Task<CheckOutDto> CheckOut(decimal totalOrder);
-
-
+        Task AddOrderDetails(int[] bookId, int userId, int checkoutId);
+        Task<IEnumerable<OrderPlcedDTO>> GetOrdersPlaced(int userId);
+        
     }
 }

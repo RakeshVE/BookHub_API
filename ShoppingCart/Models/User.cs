@@ -11,6 +11,7 @@ namespace ShoppingCart.Models
         {
             Carts = new HashSet<Cart>();
             CustomerReviews = new HashSet<CustomerReview>();
+            OrderDetails = new HashSet<OrderDetail>();
             PaymentDetails = new HashSet<PaymentDetail>();
             Wishlists = new HashSet<Wishlist>();
         }
@@ -31,6 +32,7 @@ namespace ShoppingCart.Models
 
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<CustomerReview> CustomerReviews { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<PaymentDetail> PaymentDetails { get; set; }
         public virtual ICollection<Wishlist> Wishlists { get; set; }
     }

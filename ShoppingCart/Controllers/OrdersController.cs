@@ -155,6 +155,38 @@ namespace ShoppingCart.Controllers
             }
         }
 
-        
+        [HttpPost("AddOrderDetails")]
+        public async Task<ActionResult> AddOrderDetails(int[] bookId, int userId, int checkoutId)
+        {
+            try
+            {
+                if(bookId.Length > 0 && userId > 0 && checkoutId > 0)
+                {
+                    await _ordersRepository.AddOrderDetails(bookId, userId, checkoutId);
+                }
+
+                else
+                {
+                    return BadRequest("Invalid Input");
+                }
+            }
+            catch(Exception ex)
+            {
+                _loggerManager.LogError(ex.Message);
+            }
+
+            return Ok();
+        }
+
+        [HttpGet("GetOrdersPlaced")]
+        public async Task<IEnumerable<OrderPlcedDTO>> GetOrdersPlaced (int userId)
+        {
+            var orders = await _ordersRepository.GetOrdersPlaced(userId);
+            return orders;
+        }
+
+
+       
+
     }
 }

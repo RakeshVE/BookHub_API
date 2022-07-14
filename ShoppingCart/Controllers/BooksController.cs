@@ -28,15 +28,16 @@ namespace ShoppingCart.Controllers
     {
         private readonly IBooksRepository _bookRepository;
         private readonly ShoppingCartContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ILoggerManager _loggerManager;
         private const string Tags = "backend_PhotoAlbum";
 
         private readonly Cloudinary _cloudinary;
 
-        public BooksController(IBooksRepository booksRepository, IWebHostEnvironment hostEnvironment, Cloudinary cloudinary, ShoppingCartContext context)
+        public BooksController(IBooksRepository booksRepository, ILoggerManager loggerManager, Cloudinary cloudinary, ShoppingCartContext context)
+
         {
             _bookRepository = booksRepository;
-            _webHostEnvironment = hostEnvironment;
+            _loggerManager = loggerManager;
             _context = context;
             _cloudinary = cloudinary;
         }
@@ -45,6 +46,13 @@ namespace ShoppingCart.Controllers
         public async Task<ActionResult<IEnumerable<Book>>> GetBook()
         {
             var books = await _bookRepository.GetBook();
+            return Ok(books);
+        }
+
+        [HttpPost("ApplyFilter")]
+        public async Task<ActionResult<IEnumerable<Book>>> ApplyFilter([FromBody] FilterResults filterResults)
+        {
+            var books = await _bookRepository.ApplyFilterOnBooks(filterResults);
             return Ok(books);
         }
 
@@ -182,7 +190,42 @@ namespace ShoppingCart.Controllers
 
             return Ok();
         }
+        [HttpGet("BindDropdown")]
+        public async Task<ActionResult> BindDropdown(string menuName)        
+        {
+            try
+            {
+                var results= await _bookRepository.BindDropDown(menuName);
 
-        
+                return Ok(results);
+            }
+            catch(Exception ex)
+            {
+                _loggerManager.LogError(ex.Message);
+                return StatusCode(500, $"Internal server error: {ex}");
+             
+            }           
+
+        }
+
+        [HttpGet("SerachBook")]
+        public async Task<ActionResult> SerachBook(string bookName)
+        {
+            try
+            {
+                var results = await _bookRepository.SearchBook(bookName);
+
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                _loggerManager.LogError(ex.Message);
+                return StatusCode(500, $"Internal server error: {ex}");
+
+            }
+
+
+        }
+
     }
 }

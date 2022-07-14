@@ -140,23 +140,22 @@ namespace ShoppingCart.Repositories
                      }).ToListAsync();
             return _cart;
         }
-        public async Task EmptyCart(cartReqDto cart)
+        public async Task EmptyCart(int userId)
         {
             List<Cart> _cart = new List<Cart>();
-            if (cart != null)
+            if (userId > 0)
             {
-                _cart = _context.Carts.Where(x => x.UserId == cart.UserId).ToList();
+                _cart = _context.Carts.Where(x => x.UserId == userId).ToList();
 
                 foreach (var item in _cart)
                 {
                     item.IsActive = false;
                     item.ModifiedOn = DateTime.Now;
-                    item.ModifiedBy = 1;
+                    item.ModifiedBy = userId;
+
                     _context.Carts.Update(item);
                      await _context.SaveChangesAsync();
                 }
-
-
             }
         }
         public async Task UpdateCart(cartReqDto cart)

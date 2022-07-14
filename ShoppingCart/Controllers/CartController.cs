@@ -89,19 +89,15 @@ namespace ShoppingCart.Controllers
 
         }
         [HttpPost("EmptyCart")]
-        public async Task<ActionResult> EmptyCart([FromBody] cartReqDto cart)
+        public async Task<ActionResult> EmptyCart([FromBody] int userId)
         {
             try
             {
-                if (cart is null)
+                if (userId < 0)
                 {
                     return BadRequest();
                 }
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Invalid model object");
-                }
-                await _cartRepositories.EmptyCart(cart);
+                await _cartRepositories.EmptyCart(userId);
                 return Ok();
             }
             catch (Exception ex)

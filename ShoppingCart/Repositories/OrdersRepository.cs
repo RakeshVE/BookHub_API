@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
 namespace ShoppingCart.Repositories
 {
     public class OrdersRepository : IOrdersRepository
@@ -180,7 +182,7 @@ namespace ShoppingCart.Repositories
                     Tax = checkout.Tax,
                     UserId = checkout.UserId,
                     CheckoutId = checkout.CheckoutId
-            };
+                };
 
                 return checkOutDto;
 
@@ -201,6 +203,53 @@ namespace ShoppingCart.Repositories
                 imgbase64 = imgDataURL;
             }
             return imgbase64;
+        }
+
+        public async Task AddOrderDetails([FromBody] int[] bookId, int userId, int checkoutId)
+        {
+            var length = bookId.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                var cart = _context.Carts.Where(x => x.UserId == userId && x.IsActive == true && x.BookId == bookId[i]).FirstOrDefault();
+
+                OrderDetail orderDetail = new OrderDetail
+                {
+                    OrderId = checkoutId,
+                    CheckoutId = checkoutId,
+                    BookId = bookId[i],
+                    UserId = userId,
+                    Status = "Placed",
+                    Quantity = cart.Quantity,
+                    Price = (cart.NetPay * cart.Quantity * 1.18m) + 50,
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = userId
+                };
+
+                _context.OrderDetails.Add(orderDetail);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<OrderPlcedDTO>> GetOrdersPlaced(int userId)
+        {
+            List<OrderPlcedDTO> orderPlcedDTO = new List<OrderPlcedDTO>();
+
+            orderPlcedDTO = await (from o in _context.OrderDetails
+                                   join
+                                   b in _context.Books on o.BookId equals b.BookId
+                                   where o.UserId == userId
+                                   select new OrderPlcedDTO
+                                   {
+                                       CheckoutId = o.CheckoutId,
+                                       BookId = o.BookId,
+                                       UserId = o.UserId,
+                                       Status = o.Status,
+                                       Title = b.Title,
+                                       OurPrice = b.OurPrice,
+                                       CreatedOn = o.CreatedOn
+                                   }).OrderByDescending(x => x.CreatedOn).ToListAsync();
+            return orderPlcedDTO;
         }
 
     }
