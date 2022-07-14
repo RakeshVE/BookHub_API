@@ -33,6 +33,7 @@ namespace ShoppingCart.Controllers
             using var hmac = new HMACSHA512();
 
             var user = new User
+
             {
                 UserName = registerDto.UserName.ToLower(),
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
@@ -98,5 +99,55 @@ namespace ShoppingCart.Controllers
         {
             return await _context.Users.AnyAsync(x => x.UserName == username.ToLower());
         }
+
+        [HttpGet("usernamecheck")]
+        public async Task<ActionResult> usernamecheck(string username)
+        {
+            try
+            {
+                if (await UserExists(username)) return BadRequest("Username is already taken");
+                else return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+           
+        }
+        [HttpPost("forgotpassword")]
+        public async Task<ActionResult> ForgotPassword(RegisterDto registerDto)
+        {
+            try
+            {
+                User _user = new User();
+                _user = _context.Users.Where(x => x.UserName == registerDto.UserName.ToLower() && x.Email == registerDto.Email.ToLower()).FirstOrDefault();
+                if (_user != null)
+                {
+                    using var hmac = new HMACSHA512();
+
+                    _user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+                    _user.PasswordSalt = hmac.Key;
+                    _user.ModifiedOn = DateTime.Now;
+
+                    _context.Users.Update(_user);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return BadRequest("Please insert corect data");
+                }
+
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+           
+        }
+
     }
 }
