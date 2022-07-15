@@ -139,6 +139,7 @@ namespace ShoppingCart.Controllers
         public async Task<ActionResult<CheckOutDto>> Checkout([FromBody] int orderTotal, int userId)
         {
             try
+            
             {
                 if (orderTotal == 0)
                 {
