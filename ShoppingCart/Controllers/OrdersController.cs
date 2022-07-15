@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
 using ShoppingCart.Models;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ShoppingCart.Controllers
 {
@@ -16,13 +18,13 @@ namespace ShoppingCart.Controllers
     {
         private readonly IOrdersRepository _ordersRepository;
         private readonly ILoggerManager _loggerManager;
-        public OrdersController(IOrdersRepository ordersRepository,ILoggerManager loggerManager)
+        public OrdersController(IOrdersRepository ordersRepository, ILoggerManager loggerManager)
         {
             _ordersRepository = ordersRepository;
             _loggerManager = loggerManager;
         }
         [HttpPost("AddBookToWishlist")]
-        public async Task<ActionResult> AddBookToWishlist([FromBody]AddWishListDto wishlist)
+        public async Task<ActionResult> AddBookToWishlist([FromBody] AddWishListDto wishlist)
         {
             try
             {
@@ -46,7 +48,7 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpGet("GetWishListItem")]
-        public async Task<ActionResult> GetWishListItem( int userId)
+        public async Task<ActionResult> GetWishListItem(int userId)
         {
             try
             {
@@ -54,8 +56,8 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest();
                 }
-                
-              var wishListItem= await _ordersRepository.GetWishListItemByUserId(userId);
+
+                var wishListItem = await _ordersRepository.GetWishListItemByUserId(userId);
                 return Ok(wishListItem);
             }
             catch (Exception ex)
@@ -134,11 +136,11 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpPost("Checkout")]
-        public async Task<ActionResult<CheckOutDto>> Checkout([FromBody]int orderTotal)
+        public async Task<ActionResult<CheckOutDto>> Checkout([FromBody] int orderTotal, int userId)
         {
             try
             {
-                if (orderTotal ==0)
+                if (orderTotal == 0)
                 {
                     return BadRequest();
                 }
@@ -146,7 +148,7 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid model object");
                 }
-                var data = await _ordersRepository.CheckOut(orderTotal);
+                var data = await _ordersRepository.CheckOut(orderTotal, userId);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -160,7 +162,7 @@ namespace ShoppingCart.Controllers
         {
             try
             {
-                if(bookId.Length > 0 && userId > 0 && checkoutId > 0)
+                if (bookId.Length > 0 && userId > 0 && checkoutId > 0)
                 {
                     await _ordersRepository.AddOrderDetails(bookId, userId, checkoutId);
                 }
@@ -170,7 +172,7 @@ namespace ShoppingCart.Controllers
                     return BadRequest("Invalid Input");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _loggerManager.LogError(ex.Message);
             }
@@ -179,14 +181,34 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpGet("GetOrdersPlaced")]
-        public async Task<IEnumerable<OrderPlcedDTO>> GetOrdersPlaced (int userId)
+        public async Task<IEnumerable<OrderPlcedDTO>> GetOrdersPlaced(int userId)
         {
             var orders = await _ordersRepository.GetOrdersPlaced(userId);
             return orders;
         }
 
+        [HttpPost("StripePayment")]
+        public IActionResult StripePayment([FromBody] StripePaymentRequest paymentRequest)
+        {         
 
-       
+            var options = new PaymentIntentCreateOptions
+            {
+                Amount = Convert.ToInt32(paymentRequest.amount),
+                Currency = "inr",
+                Description = "Order Name : " + paymentRequest.productName,
+                Customer= "cus_M3ZkjkHABcPsew",
+                PaymentMethodTypes = new List<string>{"card",},
+                Metadata = new Dictionary<string, string>{{"OrderId", paymentRequest.tokenId},},
+                SetupFutureUsage = "off_session"
+            };           
+
+            var chargeService = new PaymentIntentService();
+            var paymentIntent = chargeService.Create(options);
+
+            return Ok(paymentIntent);
+        }  
+
+
 
     }
 }

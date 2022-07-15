@@ -149,7 +149,7 @@ namespace ShoppingCart.Repositories
             return await orderList;
         }
 
-        public async Task<CheckOutDto> CheckOut(decimal totalOrder)
+        public async Task<CheckOutDto> CheckOut(decimal totalOrder, int userId)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace ShoppingCart.Repositories
                 var checkout = new Checkout
                 {
                     CouponId = null,
-                    UserId = 1,
+                    UserId = userId,
                     Tax = totalTax,
                     Shipping = shippingFee,
                     FinalPay = total + shippingFee,
