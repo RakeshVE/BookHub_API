@@ -13,12 +13,14 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog;
+using ShoppingCart.DTOs;
 using ShoppingCart.Helpers;
 using ShoppingCart.Interfaces;
 using ShoppingCart.Logger;
 using ShoppingCart.Models;
 using ShoppingCart.Repositories;
 using ShoppingCart.Services;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,13 +53,13 @@ namespace ShoppingCart
                 throw new ArgumentException("Please specify Cloudinary account details!");
             }
 
-            services.AddSingleton(new Cloudinary(new Account(cloudName, apiKey, apiSecret)));
+            services.AddSingleton(new Cloudinary(new CloudinaryDotNet.Account(cloudName, apiKey, apiSecret)));
 
             var dbFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\Cloudinary\\samples";
             System.IO.Directory.CreateDirectory(dbFolder);
             //Cloudinary end
 
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ITokenService, Services.TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMenusRepository, MenusRepository>();
             services.AddScoped<IBooksRepository, BooksRepository>();
@@ -65,6 +67,7 @@ namespace ShoppingCart
             services.AddScoped<ICartRepositories, CartRepositories>();
             services.AddSingleton<ILoggerManager, LoggerService>();
             services.AddScoped<ICorpSalesRepository, CorpSalesRepository>();
+            services.Configure<StripeSettings>(Configuration.GetSection("StripeToken"));
             services.AddDbContext<ShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("myConnection")));
             services.AddControllers();
             //services.AddCors();
@@ -102,6 +105,7 @@ namespace ShoppingCart
             }
 
             app.UseRouting();
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
             //  app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
