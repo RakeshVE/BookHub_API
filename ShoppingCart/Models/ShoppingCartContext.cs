@@ -25,6 +25,7 @@ namespace ShoppingCart.Models
         public virtual DbSet<CorpSale> CorpSales { get; set; }
         public virtual DbSet<Coupon> Coupons { get; set; }
         public virtual DbSet<CustomerReview> CustomerReviews { get; set; }
+        public virtual DbSet<LoginLog> LoginLogs { get; set; }
         public virtual DbSet<Menu> Menus { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<PaymentDetail> PaymentDetails { get; set; }
@@ -168,12 +169,6 @@ namespace ShoppingCart.Models
                     .WithMany(p => p.Checkouts)
                     .HasForeignKey(d => d.CouponId)
                     .HasConstraintName("FK_Checkout_Coupon");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Checkouts)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Checkout_Cart");
             });
 
             modelBuilder.Entity<CorpSale>(entity =>
@@ -277,6 +272,25 @@ namespace ShoppingCart.Models
                     .HasConstraintName("FK_CustomerReviews_Users");
             });
 
+            modelBuilder.Entity<LoginLog>(entity =>
+            {
+                entity.ToTable("LoginLog");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.LoginTime).HasColumnType("datetime");
+
+                entity.Property(e => e.LogoutTime).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Provider).HasMaxLength(50);
+
+                entity.Property(e => e.ProviderId).HasMaxLength(200);
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+            });
+
             modelBuilder.Entity<Menu>(entity =>
             {
                 entity.ToTable("Menu");
@@ -294,9 +308,9 @@ namespace ShoppingCart.Models
 
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.Status).HasMaxLength(50);
-
                 entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.Status).HasMaxLength(50);
 
                 entity.HasOne(d => d.Book)
                     .WithMany(p => p.OrderDetails)

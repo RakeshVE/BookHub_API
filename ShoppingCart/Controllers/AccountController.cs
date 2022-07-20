@@ -148,6 +148,139 @@ namespace ShoppingCart.Controllers
             }
            
         }
+        #region SSO
 
+        [HttpPost("ssoregister")]
+        public async Task<ActionResult<UserDto>> SSORegister(RegisterDto registerDto)
+        {
+            try
+            {
+                if (registerDto != null)
+                {
+                    var _user = _context.Users.Where(x => x.Email == registerDto.Email).FirstOrDefault();
+                    if (_user != null)
+                    {
+                        var userDto = new UserDto
+                        {
+                            UserId = _user.UserId,
+                            UserName = _user.UserName,
+                            FirstName = _user.FirstName,
+                            LastName = _user.LastName,
+                            Email = _user.Email,
+                            Phone = _user.Phone,
+                            IsActive = _user.IsActive,
+                            token = _tokenService.CreateToken(_user)
+                        };
+
+                        return userDto;
+                    }
+                    else
+                    {
+                        using var hmac = new HMACSHA512();
+
+                        var user = new User
+
+                        {
+                            UserName = registerDto.UserName.ToLower(),
+                            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+                            PasswordSalt = hmac.Key,
+                            FirstName = registerDto.FirstName,
+                            LastName = registerDto.LastName,
+                            Email = registerDto.Email,
+                            Phone = registerDto.Phone,
+                            IsActive = true,
+                            CreatedOn = DateTime.Now,
+                        };
+
+                        _context.Users.Add(user);
+                        await _context.SaveChangesAsync();
+                        var userDto = new UserDto
+                        {
+                            UserId = user.UserId,
+                            UserName = user.UserName,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Email = user.Email,
+                            Phone = user.Phone,
+                            IsActive = user.IsActive,
+                            token = _tokenService.CreateToken(user)
+                        };
+
+                        return userDto;
+                    }
+                }
+
+                else {
+                    //  return BadRequest("Please insert corect data");
+                    return BadRequest("you are not a valid user.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+           
+
+           
+
+           
+        }
+
+        [HttpPost("loginlog")]
+        public async Task<ActionResult<UserDto>> LoginLog(LoginLogDto loginlog)
+        {
+            try
+            {
+                var _user = _context.Users.Where(x => x.UserId == loginlog.UserId).FirstOrDefault();
+                var log = new LoginLog
+
+                {
+                    UserId = loginlog.UserId,
+                    Provider = loginlog.Provider,
+                    ProviderId = loginlog.ProviderId,
+
+                    LoginTime = DateTime.Now,
+                    LogoutTime = loginlog.LogoutTime,
+                    CreatedOn = DateTime.Now,
+                };
+
+                _context.LoginLogs.Add(log);
+                await _context.SaveChangesAsync();
+                if (_user != null)
+                {
+                    var userDto = new UserDto
+                    {
+                        UserId = _user.UserId,
+                        UserName = _user.UserName,
+                        FirstName = _user.FirstName,
+                        LastName = _user.LastName,
+                        Email = _user.Email,
+                        Phone = _user.Phone,
+                        IsActive = _user.IsActive,
+                        token = _tokenService.CreateToken(_user)
+                    };
+
+                    return userDto;
+                }
+                else
+                {
+                    return BadRequest("you are not a valid user.");
+                }
+                //  return Ok();
+
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+
+            
+
+          
+        }
+
+        #endregion SSO
     }
 }
