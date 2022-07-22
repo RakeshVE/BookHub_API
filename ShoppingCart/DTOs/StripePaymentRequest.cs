@@ -10,5 +10,10 @@ namespace ShoppingCart.DTOs
         public string tokenId { get; set; }
         public string productName { get; set; }
         public decimal amount { get; set; }
+        public string email { get; set; }
+        public int card_expMonth { get; set; }
+        public int card_expYear { get; set; }
+        public string card_id { get; set; }
+
     }
 }

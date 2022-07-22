@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Stripe.Checkout;
 
 namespace ShoppingCart.Controllers
 {
@@ -101,6 +102,7 @@ namespace ShoppingCart.Controllers
         [HttpGet("GetOrderStatus")]
         public async Task<IActionResult> GetOrderStatus()
         {
+
             var orders = await _ordersRepository.GetOrdersStatus();
             return Ok(orders);
         }
@@ -139,7 +141,7 @@ namespace ShoppingCart.Controllers
         public async Task<ActionResult<CheckOutDto>> Checkout([FromBody] int orderTotal, int userId)
         {
             try
-            
+
             {
                 if (orderTotal == 0)
                 {
@@ -190,26 +192,187 @@ namespace ShoppingCart.Controllers
 
         [HttpPost("StripePayment")]
         public IActionResult StripePayment([FromBody] StripePaymentRequest paymentRequest)
-        {         
-
-            var options = new PaymentIntentCreateOptions
+        {
+            try
             {
-                Amount = Convert.ToInt32(paymentRequest.amount),
+                // ========For Creating a new user========
+                //var options1 = new CustomerCreateOptions
+                //{
+                //    Description = "Test User 2",
+                //    Email="testuser@gmail.com",
+                //    Name="Test User",
+                //    Phone="9166948765",
+
+                //};
+                //var service = new CustomerService();
+                //service.Create(options1);
+
+
+                var paymentMethod = new PaymentMethodCreateOptions
+                {
+                    Type = "card",
+                    Card = new PaymentMethodCardOptions
+                    {
+                        Number = "5555555555554444",
+                        ExpMonth = 7,
+                        ExpYear = 2023,
+                        Cvc = "314"
+                       
+
+                    },
+                };
+                var payment = new PaymentMethodService();
+                var cardDetails = payment.Create(paymentMethod);
+                var options = new PaymentIntentCreateOptions
+                {
+                    Amount = Convert.ToInt32(paymentRequest.amount),
+                    Currency = "inr",
+                    Description = "Order Name : " + paymentRequest.productName,
+                    Customer = "cus_M3ZkjkHABcPsew",
+                    PaymentMethodTypes = new List<string> { "card", },
+                    PaymentMethod = cardDetails.Id,//"pm_1LNtV6SBVnjJH0yCu611zor6",
+                   
+
+                    Metadata = new Dictionary<string, string> { { "OrderId", paymentRequest.tokenId }, },
+                    SetupFutureUsage = "on_session"
+                };
+
+                var chargeService = new PaymentIntentService();
+                var paymentIntent = chargeService.Create(options);
+                chargeService.Confirm(paymentIntent.Id);
+
+                AtttachPaymentMethod("pm_1LNtV6SBVnjJH0yCu611zor6");
+
+                var aetUpIntent = new SetupIntentCreateOptions
+                {
+                    PaymentMethodTypes = new List<string>
+                      {
+                        "card",
+                      },
+                    Customer= "cus_M3ZkjkHABcPsew",
+                    PaymentMethod = "pm_1LNtV6SBVnjJH0yCu611zor6"
+                };
+
+                var setupService = new SetupIntentService();
+                var setupResult= setupService.Create(aetUpIntent);
+
+                var setupIntent = new SetupIntentConfirmOptions
+                {
+                    PaymentMethod = "pm_1LNtV6SBVnjJH0yCu611zor6",
+                };
+                var setupIntentResult= setupService.Confirm(setupResult.Id);
+                //var service2 = new EventService();
+                //var rr= service2.Get(paymentIntent.Id);
+
+              //  CreateInvoice(paymentRequest);
+                return Ok(paymentIntent);
+            } 
+            catch(Exception ex)
+            {
+                _loggerManager.LogError(ex.Message);
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
+            
+        }
+
+        private void AtttachPaymentMethod(string paymentMthodId)
+        {
+            var options = new PaymentMethodAttachOptions
+            {
+                Customer = "cus_M3ZkjkHABcPsew",
+            };
+            var service = new PaymentMethodService();
+            service.Attach(paymentMthodId     ,
+              options);
+            
+        }
+
+        [HttpPost("create-checkout-session")]
+        public ActionResult CreateCheckoutSession()
+        {
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                  new SessionLineItemOptions
+                  {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                      UnitAmount = 2000,
+                      Currency = "inr",
+                      ProductData = new SessionLineItemPriceDataProductDataOptions
+                      {
+                        Name = "T-shirt",
+                      },
+
+                    },
+                    Quantity = 1,
+                  },
+                },
+                Mode = "payment",
+                SuccessUrl = "https://example.com/success",
+                CancelUrl = "https://example.com/cancel",
+            };
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+
+        [HttpPost("CreateInvoice")]
+        public IActionResult CreateInvoice([FromBody] StripePaymentRequest PaymentRequest)
+        {
+            var options = new ProductCreateOptions { Name = "AWS Learning Test" };
+            var service = new ProductService();
+            var productDetails = service.Create(options);
+            
+
+            var priceCreate = new PriceCreateOptions
+            {
+                Product = productDetails.Id,//"{{PRODUCT_ID}}"
+                UnitAmount = Convert.ToInt64(PaymentRequest.amount),
                 Currency = "inr",
-                Description = "Order Name : " + paymentRequest.productName,
-                Customer= "cus_M3ZkjkHABcPsew",
-                PaymentMethodTypes = new List<string>{"card",},
-                Metadata = new Dictionary<string, string>{{"OrderId", paymentRequest.tokenId},},
-                SetupFutureUsage = "off_session"
-            };           
+            };
+            var priceService = new PriceService();
+            var price = priceService.Create(priceCreate);
 
-            var chargeService = new PaymentIntentService();
-            var paymentIntent = chargeService.Create(options);
+            var customer = new CustomerCreateOptions
+            {
+                Name = "Jeremy Renner",
+                Email = "nekisaini@outlook.com",
+                Description = "Book Store Customer",
+            };
+            var customerService = new CustomerService();
+            var customerDetails = customerService.Create(customer);
 
-            return Ok(paymentIntent);
-        }  
+            var invoice = new InvoiceItemCreateOptions
+            {
+                Customer = customerDetails.Id, //"{{CUSTOMER_ID}}",
+                Price = price.Id //"{{PRICE_ID}}",
+
+            };
+            var invoiceItem = new InvoiceItemService();
+            var invoiceService = invoiceItem.Create(invoice);
+
+            var invoiceCreate = new InvoiceCreateOptions
+            {
+                Customer = customerDetails.Id,//"{{CUSTOMER_ID}}",
+                CollectionMethod = "send_invoice",
+                DaysUntilDue = 30,
+            };
+            var invCreate = new InvoiceService();
+            var createInvoice = invCreate.Create(invoiceCreate);
+
+            var finalize = new InvoiceService();
+            var fnlz= finalize.FinalizeInvoice(createInvoice.Id);//("{{INVOICE_ID}}");
+            finalize.SendInvoice(createInvoice.Id);
+           // var details = service.Get(invoiceService.Id);
+            var payInvoiceUrl = fnlz.HostedInvoiceUrl;
 
 
-
+            return Ok(payInvoiceUrl);
+        }
     }
 }
