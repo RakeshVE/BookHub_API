@@ -30,6 +30,13 @@ namespace ShoppingCart.Repositories
 
         public async Task<IEnumerable<BookDto>> GetBook()
         {
+            var book = await _context.Books.Where(x=>x.IsActive==true).ToListAsync();
+            var bookDto = BindBook(book);
+            return bookDto;
+        }
+
+        public async Task<IEnumerable<BookDto>> GetAllBook()
+        {
             var book = await _context.Books.ToListAsync();
             var bookDto = BindBook(book);
             return bookDto;
@@ -39,42 +46,53 @@ namespace ShoppingCart.Repositories
         public void UploadBook(BookDto book, IFormFile files)
         {
             Book _books = new Book();
-            if (book != null)
+            try
             {
-                _books.Title = book.Title;
-
-                if (files.Length > 0)
+                if (book != null)
                 {
-                    using (var ms = new MemoryStream())
+                    _books.Title = book.Title;
+
+                    if (files.Length > 0)
                     {
-                        files.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        _books.Image = fileBytes;
+                        using (var ms = new MemoryStream())
+                        {
+                            files.CopyTo(ms);
+                            var fileBytes = ms.ToArray();
+                            _books.Image = fileBytes;
+                        }
                     }
+                    // _books.BookId = book.BookId;
+                    _books.ListPrice = book.ListPrice;
+                    _books.OurPrice = book.OurPrice;
+                    _books.Rating = book.Rating;
+                    _books.ReviewCount = book.ReviewCount;
+                    _books.Details = book.Details;
+                    _books.ProductType = book.ProductType;
+                    _books.Description = book.Description;
+                    _books.SystemReq = book.SystemReq;
+                    _books.Demo = book.Demo;
+                    _books.IsActive = book.IsActive;
+                    _books.MenuId = book.MenuId;
+                    _books.IsBook = book.IsBook;
+                    _books.CreatedOn = DateTime.Now;
+                    _books.CreatedBy = book.CreatedBy;
+                    _books.ContentType = book.ContentType;
+                    _books.Certification = book.Certification;
+                    _books.Publisher = book.Publisher;
                 }
-                _books.BookId = book.BookId;
-                _books.ListPrice = book.ListPrice;
-                _books.OurPrice = book.OurPrice;
-                _books.Rating = book.Rating;
-                _books.ReviewCount = book.ReviewCount;
-                _books.Details = book.Details;
-                _books.ProductType = book.ProductType;
-                _books.Description = book.Description;
-                _books.SystemReq = book.SystemReq;
-                _books.Demo = book.Demo;
-                _books.IsActive = book.IsActive;
-                _books.MenuId = book.MenuId;
-                _books.IsBook = book.IsBook;
-                _books.CreatedOn = DateTime.Now;
-                _books.CreatedBy = 1;
+                _context.Books.Add(_books);
+                _context.SaveChanges();
             }
-            _context.Books.Add(_books);
-            _context.SaveChanges();
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
-        public async Task<BookDto> GetBookById(int id)
+        public async Task<BookDto> GetBookById(int id, int userId)
         {
-            var book = await _context.Books.Include(x => x.Wishlists).Where(x => x.BookId == id).FirstOrDefaultAsync();
+            var book = await _context.Books.Include(x => x.Wishlists.Where(u=>u.UserId==userId)).Where(x => x.BookId == id && x.IsActive==true ).FirstOrDefaultAsync();
             
             BookDto _convImg = new BookDto();
             if (book is not null)
@@ -246,7 +264,7 @@ namespace ShoppingCart.Repositories
 
         public async Task<IEnumerable<BookDto>> SearchBook(string bookName)
         {
-            var book = await _context.Books.Where(x => x.Title.Contains(bookName)).ToListAsync();
+            var book = await _context.Books.Where(x => x.Title.Contains(bookName) && x.IsActive==true).ToListAsync();
             var bookDto = BindBook(book);
 
             return bookDto;
@@ -288,6 +306,43 @@ namespace ShoppingCart.Repositories
             return  bookDto;
 
         }
-        
+
+
+        public async Task<string> UpdateStatus(int bookId)
+        {
+            Book book = new Book();
+            string status = "";
+            
+
+            book = await _context.Books.Where(x => x.BookId == bookId).FirstOrDefaultAsync();
+
+            try 
+            {
+                if (book.IsActive != null)
+                {
+                    if (book.IsActive==true)
+                    {
+                        book.IsActive = false;
+
+                    }
+                    else
+                    {
+                        book.IsActive = true;
+                    }
+
+                    _context.Books.Update(book);
+                    await _context.SaveChangesAsync();
+                    status = "Updated Successfully";
+                }
+
+            }
+            catch (Exception ex) 
+            {
+                status= "Error";
+            }
+
+            return status;
+        }
+
     }
 }

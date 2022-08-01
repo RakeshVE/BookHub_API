@@ -57,7 +57,7 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpPost("UploadBook")]
-        public ActionResult UploadBook([FromForm] IFormFile file, [FromQuery] BookDto book)
+        public ActionResult UploadBook([FromForm] BookDto book)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid model object");
                 }
-                _bookRepository.UploadBook(book, file);
+                _bookRepository.UploadBook(book, book.Photo);
                 return Ok();
             }
             catch (Exception ex)
@@ -80,7 +80,7 @@ namespace ShoppingCart.Controllers
 
         }
         [HttpGet("GetBookById")]
-        public async Task<ActionResult> GetBookById(int id)
+        public async Task<ActionResult> GetBookById(int id ,int userId)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace ShoppingCart.Controllers
                 {
                     return BadRequest("Invalid id");
                 }
-                var book = await _bookRepository.GetBookById(id);
+                var book = await _bookRepository.GetBookById(id,userId);
                 return Ok(book);
             }
             catch (Exception ex)
@@ -190,6 +190,13 @@ namespace ShoppingCart.Controllers
 
             return Ok();
         }
+
+        //public class bookData
+        //{
+        //    public string Title { get; set; }
+        //    public int Price { get; set; }
+        //    public IFormFile Photo { get; set; }
+        //}
         [HttpGet("BindDropdown")]
         public async Task<ActionResult> BindDropdown(string menuName)        
         {
@@ -207,6 +214,8 @@ namespace ShoppingCart.Controllers
             }           
 
         }
+
+       
 
         [HttpGet("SerachBook")]
         public async Task<ActionResult> SerachBook(string bookName)
@@ -226,6 +235,33 @@ namespace ShoppingCart.Controllers
 
 
         }
+
+
+        [HttpGet("GetAllBook")]
+        public async Task<ActionResult<IEnumerable<Book>>> GetAllBook()
+        {
+            var books = await _bookRepository.GetAllBook();
+            return Ok(books);
+        }
+
+        [HttpGet("UpdateStatus")]
+        public async Task<ActionResult> UpdateStatus(int bookId)
+        {
+            try
+            {
+                var results = await _bookRepository.UpdateStatus(bookId);
+
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                _loggerManager.LogError(ex.Message);
+                return StatusCode(500, $"Internal server error: {ex}");
+
+            }
+        }
+
+
 
     }
 }
