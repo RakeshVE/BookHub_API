@@ -24,5 +24,6 @@ namespace ShoppingCart.Interfaces
         Task<IEnumerable<BookDto>> SearchBook(string bookName);
 
         Task<string> UpdateStatus(int bookId);
+        Task<string> UpdateBook(BookDto book);
     }
 }

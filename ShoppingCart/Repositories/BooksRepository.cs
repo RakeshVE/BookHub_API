@@ -310,6 +310,43 @@ namespace ShoppingCart.Repositories
 
         }
 
+        public async Task<string> UpdateBook(BookDto book)
+        {
+            string status = "";
+            var result = await _context.Books.FirstOrDefaultAsync(e => e.BookId == book.BookId);
+
+            if(result != null)
+            {
+                result.Title = book.Title;
+                result.ListPrice = book.ListPrice;
+                result.OurPrice = book.OurPrice;
+                result.Rating = book.Rating;
+                result.ReviewCount = book.ReviewCount;
+                result.Details = book.Details;
+                result.ProductType = book.ProductType;
+                result.Description = book.Description;
+                result.SystemReq = book.SystemReq;
+                result.Demo = book.Demo;
+                result.IsActive = book.IsActive;
+                result.MenuId = book.MenuId;
+                result.IsBook = book.IsBook;
+                result.CreatedOn = DateTime.Now;
+                result.CreatedBy = book.CreatedBy;
+                result.ContentType = book.ContentType;
+                result.Certification = book.Certification;
+                result.Publisher = book.Publisher;
+                
+                
+                await _context.SaveChangesAsync();
+                status = "Updated Successfully";
+              //  return status;
+
+            }
+            
+
+            return status;
+        }
+
 
         public async Task<string> UpdateStatus(int bookId)
         {

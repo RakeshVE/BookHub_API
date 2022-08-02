@@ -261,7 +261,22 @@ namespace ShoppingCart.Controllers
             }
         }
 
+        [HttpPost("UpdateBook")]
+        public async Task<ActionResult> UpdateBook([FromForm] BookDto book)
+        {
+            try
+            {
+                var results = await _bookRepository.UpdateBook(book);
 
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _loggerManager.LogError(ex.Message);
+                return StatusCode(500, $"Internal server error: {ex}");
+
+            }
+        }
 
     }
 }
