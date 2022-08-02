@@ -117,7 +117,10 @@ namespace ShoppingCart.Repositories
                 _convImg.IsActive = book.IsActive;
                 _convImg.MenuId = book.MenuId;
                 _convImg.IsBook = true;
-                if(book.Wishlists.Count == 0)
+                _convImg.Publisher = book.Publisher;
+                _convImg.Certification = book.Certification;
+                _convImg.ContentType = book.ContentType;
+                if (book.Wishlists.Count == 0)
                 {
                     _convImg.WishlistAdded = true;
                 }
