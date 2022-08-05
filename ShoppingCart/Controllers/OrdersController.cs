@@ -92,7 +92,7 @@ namespace ShoppingCart.Controllers
             }
         }
 
-        [HttpGet("")]
+        [HttpGet("GetOrders")]
         public async Task<IActionResult> GetOrders()
         {
             var orderdetail = await _ordersRepository.GetOrdersAsync();

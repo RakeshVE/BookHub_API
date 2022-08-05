@@ -67,6 +67,8 @@ namespace ShoppingCart
             services.AddScoped<ICartRepositories, CartRepositories>();
             services.AddSingleton<ILoggerManager, LoggerService>();
             services.AddScoped<ICorpSalesRepository, CorpSalesRepository>();
+            services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
+
             services.Configure<StripeSettings>(Configuration.GetSection("StripeToken"));
             services.AddDbContext<ShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("myConnection")));
             services.AddControllers();
