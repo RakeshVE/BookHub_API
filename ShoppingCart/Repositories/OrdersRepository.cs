@@ -80,10 +80,26 @@ namespace ShoppingCart.Repositories
             {
             }
         }
-        public async Task<List<OrderDetailDto>> GetOrdersAsync()
+        public async Task<List<AdminOrderDetailsDto>> GetOrdersAsync()
         {
-            var orderdetail = await _context.OrderDetails.ToListAsync();
-            return _mapper.Map<List<OrderDetailDto>>(orderdetail);
+            List<AdminOrderDetailsDto> _order = new List<AdminOrderDetailsDto>();
+            _order = await (from c in _context.OrderDetails
+                           join b in _context.Books on c.BookId equals b.BookId
+                           //  where c.UserId == userId
+                           select new AdminOrderDetailsDto
+                           {
+                               BookId = b.BookId,
+                               OrderId=c.OrderId,
+                               ImageUrl = ToBase64String(b.Image),
+                               BookName = b.Title,
+                               ProductType = b.ProductType,
+                               OurPrice = b.OurPrice,
+                               Rating = b.Rating
+                           }).ToListAsync();
+
+            return _order;
+            //var orderdetail = await _context.OrderDetails.ToListAsync();
+            //return _mapper.Map<List<AdminOrderDetailsDto>>(orderdetail);
         }
         public async Task<OrderDetailDto> GetOrderByIdAsync(int id)
         {
