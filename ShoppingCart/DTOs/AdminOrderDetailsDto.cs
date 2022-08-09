@@ -18,7 +18,7 @@ namespace ShoppingCart.DTOs
         public string ProductType { get; set; }
         public string ImageUrl { get; set; }
         public string ImageName { get; set; }
-        public DateTime? CreatedOn { get; set; }
+        public string CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }

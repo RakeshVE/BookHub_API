@@ -37,7 +37,7 @@ namespace ShoppingCart.Repositories
             catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
 
 

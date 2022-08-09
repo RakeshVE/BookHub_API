@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace ShoppingCart.Repositories
 {
@@ -94,7 +95,10 @@ namespace ShoppingCart.Repositories
                                BookName = b.Title,
                                ProductType = b.ProductType,
                                OurPrice = b.OurPrice,
-                               Rating = b.Rating
+                               Rating = b.Rating,
+                               CreatedOn= String.Format("{0:dd/MM/yyyy}", c.CreatedOn)
+
+
                            }).ToListAsync();
 
             return _order;
