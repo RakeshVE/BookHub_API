@@ -12,7 +12,6 @@ namespace ShoppingCart.Interfaces
         Task<IEnumerable<WishlistItemDto>> GetWishListItemByUserId(int userId);
         Task AddToWishList(AddWishListDto wishlist);
         Task AddShippingDetails(ShippingDto shipping);
-        Task<List<OrderDetailDto>> GetOrdersAsync();
         Task<OrderDetailDto> GetOrderByIdAsync(int id);
         Task<int> AddOrderAsync(OrderDetailDto orderdto);
         Task UpdateOrderAsync(int id, OrderDetailDto orderdto);
@@ -22,6 +21,8 @@ namespace ShoppingCart.Interfaces
         Task<CheckOutDto> CheckOut(decimal totalOrder,int userId);
         Task AddOrderDetails(int[] bookId, int userId, int checkoutId);
         Task<IEnumerable<OrderPlcedDTO>> GetOrdersPlaced(int userId);
-        
+        Task<List<AdminOrderDetailsDto>> GetOrdersAsync();
+
+
     }
 }
