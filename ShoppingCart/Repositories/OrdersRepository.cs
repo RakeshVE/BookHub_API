@@ -86,7 +86,9 @@ namespace ShoppingCart.Repositories
             List<AdminOrderDetailsDto> _order = new List<AdminOrderDetailsDto>();
             _order = await (from c in _context.OrderDetails
                            join b in _context.Books on c.BookId equals b.BookId
-                           //  where c.UserId == userId
+                           //  where c.UserId == userId o
+                           orderby c.OrderId descending
+
                            select new AdminOrderDetailsDto
                            {
                                BookId = b.BookId,
