@@ -67,7 +67,7 @@ namespace ShoppingCart.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.UserName);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.UserName && x.IsActive==true);
 
             if (user == null) return Unauthorized("Invalid Username");
 

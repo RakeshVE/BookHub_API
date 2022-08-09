@@ -11,5 +11,6 @@ namespace ShoppingCart.Interfaces
     {
         Task<IEnumerable<User>> GetUsers();
         Task<User> GetUserById(int id);
+        Task<string> DeactivtaeUser(int userId);
     }
 }

@@ -19,11 +19,13 @@ namespace ShoppingCart.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILoggerManager _loggerManager;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IUserRepository userRepository, ILoggerManager loggerManager)
         {
             _userRepository = userRepository;
-        }
+            _loggerManager = loggerManager;
+    }
 
         [HttpGet("GetUsers")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
@@ -39,5 +41,23 @@ namespace ShoppingCart.Controllers
             return user;
         }
 
+        [HttpGet("DeactivateUser")]
+        public async Task<IActionResult> DeactivateUser(int userId)
+        {
+            try
+            {
+                if(userId < 0)
+                {
+                    return BadRequest("Invalid Id");
+                }
+                var user = await _userRepository.DeactivtaeUser(userId);
+                return Ok(user);
+            }
+            catch(Exception ex)
+            {
+                _loggerManager.LogError(ex.Message);
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
     }
 }
