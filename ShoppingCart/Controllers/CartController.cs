@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
-using ShoppingCart.Models;
+using ShoppingCart.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ShoppingCart.DTO.DTOs;
 
 namespace ShoppingCart.Controllers
 {

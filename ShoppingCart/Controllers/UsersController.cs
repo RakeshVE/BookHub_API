@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
-using ShoppingCart.Models;
+using ShoppingCart.DAL.Models;
 using ShoppingCart.Repositories;
 
 namespace ShoppingCart.Controllers

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Class1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShoppingCart.DAL\ShoppingCart.DAL.csproj" />
+    <ProjectReference Include="..\ShoppingCart.DTO\ShoppingCart.DTO.csproj" />
+    <ProjectReference Include="..\ShoppingCart.HELPERS\ShoppingCart.HELPERS.csproj" />
+  </ItemGroup>
+
+</Project>

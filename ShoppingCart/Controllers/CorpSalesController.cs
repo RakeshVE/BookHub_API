@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingCart.DTOs;
+using ShoppingCart.DTO.DTOs;
 using ShoppingCart.Interfaces;
 using System;
 using System.Collections.Generic;

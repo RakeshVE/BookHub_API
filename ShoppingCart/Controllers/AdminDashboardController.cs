@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
 using System;
 using System.Collections.Generic;
