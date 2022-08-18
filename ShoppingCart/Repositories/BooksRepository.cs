@@ -302,6 +302,7 @@ namespace ShoppingCart.Repositories
                 _convImg.IsActive = items.IsActive;
                 _convImg.MenuId = items.MenuId;
                 _convImg.IsBook = true;
+                _convImg.ContentType = items.ContentType;
 
                 bookDto.Add(_convImg);
             }
