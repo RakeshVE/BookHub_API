@@ -1,0 +1,17 @@
+﻿using ShoppingCart.DAL.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ShoppingCart.DTO.DTOs;
+
+namespace ShoppingCart.Interfaces
+{
+    public interface IMenusRepository
+    {
+        Task<IEnumerable<string>> GetMenus();
+        Task<IEnumerable<string>> GetSubMenuByName(string menu);
+        Task<IEnumerable<BookDto>> GetBooksBySubMenu(string menu);
+        Task<IEnumerable<BookDto>> GetBookByMenuId(int id);
+    }
+}

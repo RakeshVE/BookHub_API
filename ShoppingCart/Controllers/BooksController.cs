@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
-using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
-using ShoppingCart.Models;
+using ShoppingCart.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +16,8 @@ using CloudinaryDotNet.Actions;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using UploadResult = ShoppingCart.Models.UploadResult;
+using UploadResult = ShoppingCart.DAL.Models.UploadResult;
+using ShoppingCart.DTO.DTOs;
 
 namespace ShoppingCart.Controllers
 {

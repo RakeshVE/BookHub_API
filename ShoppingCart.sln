@@ -3,7 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCart", "ShoppingCart\ShoppingCart.csproj", "{6CD32221-1F23-49DC-B9C0-7AE9F2191CDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCart.WEBAPI", "ShoppingCart\ShoppingCart.WEBAPI.csproj", "{6CD32221-1F23-49DC-B9C0-7AE9F2191CDB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCart.SERVICES", "ShoppingCart.SERVCIES\ShoppingCart.SERVICES.csproj", "{6D783537-ADAB-49E0-B43E-3866D9001352}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCart.DTO", "ShoppingCart.DTO\ShoppingCart.DTO.csproj", "{6389D916-C62D-4B31-9A20-659819C839A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCart.HELPERS", "ShoppingCart.HELPERS\ShoppingCart.HELPERS.csproj", "{6CC94FFC-F1A0-44B4-B287-B924C1B67A3E}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ShoppingCart.DATABASE", "ShoppingCart.DATABASE\ShoppingCart.DATABASE.sqlproj", "{FCBB4084-FF0E-437B-A393-475DE0A25A47}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCart.BLL", "ShoppingCart.BLL\ShoppingCart.BLL.csproj", "{36DD055B-C68F-4C89-81E4-A70484325D92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCart.DAL", "ShoppingCart.DAL\ShoppingCart.DAL.csproj", "{8640C9E0-BB2D-4756-8EAE-F74494A5511A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +27,32 @@ Global
 		{6CD32221-1F23-49DC-B9C0-7AE9F2191CDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CD32221-1F23-49DC-B9C0-7AE9F2191CDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CD32221-1F23-49DC-B9C0-7AE9F2191CDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D783537-ADAB-49E0-B43E-3866D9001352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D783537-ADAB-49E0-B43E-3866D9001352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D783537-ADAB-49E0-B43E-3866D9001352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D783537-ADAB-49E0-B43E-3866D9001352}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6389D916-C62D-4B31-9A20-659819C839A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6389D916-C62D-4B31-9A20-659819C839A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6389D916-C62D-4B31-9A20-659819C839A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6389D916-C62D-4B31-9A20-659819C839A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CC94FFC-F1A0-44B4-B287-B924C1B67A3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CC94FFC-F1A0-44B4-B287-B924C1B67A3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CC94FFC-F1A0-44B4-B287-B924C1B67A3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CC94FFC-F1A0-44B4-B287-B924C1B67A3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCBB4084-FF0E-437B-A393-475DE0A25A47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCBB4084-FF0E-437B-A393-475DE0A25A47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCBB4084-FF0E-437B-A393-475DE0A25A47}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FCBB4084-FF0E-437B-A393-475DE0A25A47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCBB4084-FF0E-437B-A393-475DE0A25A47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCBB4084-FF0E-437B-A393-475DE0A25A47}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{36DD055B-C68F-4C89-81E4-A70484325D92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36DD055B-C68F-4C89-81E4-A70484325D92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36DD055B-C68F-4C89-81E4-A70484325D92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36DD055B-C68F-4C89-81E4-A70484325D92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8640C9E0-BB2D-4756-8EAE-F74494A5511A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8640C9E0-BB2D-4756-8EAE-F74494A5511A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8640C9E0-BB2D-4756-8EAE-F74494A5511A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8640C9E0-BB2D-4756-8EAE-F74494A5511A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
