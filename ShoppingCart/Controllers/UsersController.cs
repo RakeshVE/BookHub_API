@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Interfaces;
 using ShoppingCart.DAL.Models;
 using ShoppingCart.Repositories;
+using ShoppingCart.BLL.Class;
 
 namespace ShoppingCart.Controllers
 {
@@ -17,10 +18,10 @@ namespace ShoppingCart.Controllers
    // [Authorize]
     public class UsersController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly UserBL _userRepository;
         private readonly ILoggerManager _loggerManager;
 
-        public UsersController(IUserRepository userRepository, ILoggerManager loggerManager)
+        public UsersController(UserBL userRepository, ILoggerManager loggerManager)
         {
             _userRepository = userRepository;
             _loggerManager = loggerManager;

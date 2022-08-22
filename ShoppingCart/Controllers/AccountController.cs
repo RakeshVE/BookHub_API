@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShoppingCart.Interfaces;
 using ShoppingCart.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ShoppingCart.DTO.DTOs;
+using ShoppingCart.Interfaces;
 
 namespace ShoppingCart.Controllers
 {

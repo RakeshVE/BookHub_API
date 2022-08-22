@@ -27,6 +27,7 @@ using CloudinaryDotNet;
 using ShoppingCart.Logger;
 using ShoppingCart.DTO.DTOs;
 using ShoppingCart.HELPERS.Helpers;
+using ShoppingCart.BLL.Class;
 
 namespace ShoppingCart.WEBAPI
 {
@@ -67,7 +68,21 @@ namespace ShoppingCart.WEBAPI
             services.AddSingleton<ILoggerManager, LoggerService>();
             services.AddScoped<ICorpSalesRepository, CorpSalesRepository>();
             services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
-            
+            services.AddScoped<AdminDashboardBL>();
+            services.AddScoped<BooksBL>();
+            services.AddScoped<CartBL>();
+            services.AddScoped<CorpSalesBL>();
+            services.AddScoped<MenusBL>();
+            services.AddScoped<OrdersBL>();
+            services.AddScoped<UserBL>();
+
+
+
+
+
+
+
+
             services.Configure<StripeSettings>(Configuration.GetSection("StripeToken"));
             services.AddDbContext<ShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("myConnection")));
             services.AddControllers();

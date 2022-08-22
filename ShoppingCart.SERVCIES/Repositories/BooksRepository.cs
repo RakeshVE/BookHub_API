@@ -156,18 +156,52 @@ namespace ShoppingCart.Repositories
             return _convImg;
         }
 
-        public void UploadBookImage(BookImage book)
+        public void UploadBookImage(BookImageDto book)
         {
-            _context.BookImages.Add(book);
+            BookImage obj = new BookImage();
+            obj.Id = book.Id;
+            obj.BookId = book.BookId;
+            obj.ImageUrl = book.ImageUrl;
+            obj.ImageName = book.ImageName;
+
+
+            _context.BookImages.Add(obj);
             _context.SaveChanges();
 
         }
-        public async Task<IEnumerable<Photo>> GetBookImage(int bookId)
+        public async Task<IEnumerable<PhotoDto>> GetBookImage(int bookId)
         {
+            List<PhotoDto> obj = new List<PhotoDto>();
             //var bookImages = await _context.BookImages.Where(x => x.BookId == bookId).ToListAsync();
             //return bookImages;
             var cloudimage = await _context.Photos.Where(x => x.BookId == bookId).ToListAsync();
-            return cloudimage;
+            foreach (var items in cloudimage)
+            {
+                PhotoDto _photodto = new PhotoDto();
+
+
+                _photodto.BookId = items.BookId;
+
+                _photodto.Id = items.Id;
+                _photodto.CreatedAt = items.CreatedAt;
+                _photodto.PublicId = items.PublicId;
+                _photodto.Version = items.Version;
+                _photodto.Signature = items.Signature;
+                _photodto.Width = items.Width;
+                _photodto.Height = items.Height;
+                _photodto.Format = items.Format;
+                _photodto.ResourceType = items.ResourceType;
+                _photodto.Bytes = items.Bytes;
+                _photodto.Type = items.Type;
+                _photodto.Url = items.Url;
+                _photodto.SecureUrl = items.SecureUrl;
+                _photodto.Path = items.Path;
+
+
+                obj.Add(_photodto);
+            }
+
+            return obj;
         }
 
         public async Task<dynamic> BindDropDown(string menuName)

@@ -16,8 +16,8 @@ namespace ShoppingCart.Interfaces
         Task<BookDto> GetBookById(int id, int userId);
         Task<BookDto> GetBookByMenuId(int id);
 
-        void UploadBookImage(BookImage bookImage);
-        Task<IEnumerable<Photo>> GetBookImage(int bookId);
+        void UploadBookImage(BookImageDto bookImage);
+        Task<IEnumerable<PhotoDto>> GetBookImage(int bookId);
 
         Task<dynamic> BindDropDown(string menuName);
         Task<IEnumerable<BookDto>> ApplyFilterOnBooks(FilterResults filterResults);

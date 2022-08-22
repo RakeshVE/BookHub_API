@@ -18,6 +18,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using UploadResult = ShoppingCart.DAL.Models.UploadResult;
 using ShoppingCart.DTO.DTOs;
+using ShoppingCart.BLL.Class;
 
 namespace ShoppingCart.Controllers
 {
@@ -26,19 +27,18 @@ namespace ShoppingCart.Controllers
     //[Authorize]
     public class BooksController : ControllerBase
     {
-        private readonly IBooksRepository _bookRepository;
+        private readonly BooksBL _bookRepository;
         private readonly ShoppingCartContext _context;
         private readonly ILoggerManager _loggerManager;
         private const string Tags = "backend_PhotoAlbum";
 
         private readonly Cloudinary _cloudinary;
 
-        public BooksController(IBooksRepository booksRepository, ILoggerManager loggerManager, Cloudinary cloudinary, ShoppingCartContext context)
-
+        public BooksController(BooksBL bookRepository, ShoppingCartContext context, ILoggerManager loggerManager, Cloudinary cloudinary)
         {
-            _bookRepository = booksRepository;
-            _loggerManager = loggerManager;
+            _bookRepository = bookRepository;
             _context = context;
+            _loggerManager = loggerManager;
             _cloudinary = cloudinary;
         }
 

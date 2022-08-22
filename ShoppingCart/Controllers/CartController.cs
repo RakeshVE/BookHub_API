@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ShoppingCart.DTO.DTOs;
+using ShoppingCart.BLL.Class;
 
 namespace ShoppingCart.Controllers
 {
@@ -15,11 +16,11 @@ namespace ShoppingCart.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-        private readonly ICartRepositories _cartRepositories;
+        private readonly CartBL _cartRepositories;
         private readonly ShoppingCartContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CartController(ICartRepositories cartRepositories, ShoppingCartContext context, IWebHostEnvironment webHostEnvironment)
+        public CartController(CartBL cartRepositories, ShoppingCartContext context, IWebHostEnvironment webHostEnvironment)
         {
             _cartRepositories = cartRepositories;
             _context = context;
