@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShoppingCart.DTOs;
-using ShoppingCart.Interfaces;
-using ShoppingCart.Models;
+using ShoppingCart.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using ShoppingCart.DTO.DTOs;
+using ShoppingCart.Interfaces;
 
 namespace ShoppingCart.Controllers
 {

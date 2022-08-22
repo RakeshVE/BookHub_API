@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
-using ShoppingCart.Models;
+using ShoppingCart.DAL.Models;
+using ShoppingCart.DTO.DTOs;
+using ShoppingCart.BLL.Class;
 
 namespace ShoppingCart.Controllers
 {
@@ -17,9 +18,9 @@ namespace ShoppingCart.Controllers
    // [Authorize]
     public class MenusController : ControllerBase
     {
-        private readonly IMenusRepository _menusRepository;
+        private readonly MenusBL _menusRepository;
 
-        public MenusController(IMenusRepository menusRepository)
+        public MenusController(MenusBL menusRepository)
         {
             _menusRepository = menusRepository;
         }

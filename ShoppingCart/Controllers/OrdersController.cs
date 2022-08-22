@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingCart.DTOs;
 using ShoppingCart.Interfaces;
-using ShoppingCart.Models;
+using ShoppingCart.DAL.Models;
 using Stripe;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Stripe.Checkout;
+using ShoppingCart.DTO.DTOs;
+using ShoppingCart.BLL.Class;
 
 namespace ShoppingCart.Controllers
 {
@@ -17,9 +18,9 @@ namespace ShoppingCart.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly IOrdersRepository _ordersRepository;
+        private readonly OrdersBL _ordersRepository;
         private readonly ILoggerManager _loggerManager;
-        public OrdersController(IOrdersRepository ordersRepository, ILoggerManager loggerManager)
+        public OrdersController(OrdersBL ordersRepository, ILoggerManager loggerManager)
         {
             _ordersRepository = ordersRepository;
             _loggerManager = loggerManager;

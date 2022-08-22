@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingCart.DTOs;
+using ShoppingCart.BLL.Class;
 using ShoppingCart.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,12 +13,14 @@ namespace ShoppingCart.Controllers
     [ApiController]
     public class AdminDashboardController : ControllerBase
     {
-        private IAdminDashboardRepository _AdminDashboardRepository;
+        public AdminDashboardBL _AdminDashboardRepository;
 
-        public AdminDashboardController(IAdminDashboardRepository adminDashboardRepository)
+
+        public AdminDashboardController(AdminDashboardBL adminDashboardRepository)
         {
             _AdminDashboardRepository = adminDashboardRepository;
         }
+
         [HttpGet("GetDashBoardData")]
         public async Task<ActionResult> GetDashBoardData()
         {

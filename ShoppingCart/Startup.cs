@@ -1,8 +1,8 @@
-using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,29 +12,29 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using NLog;
-using ShoppingCart.DTOs;
-using ShoppingCart.Helpers;
+using ShoppingCart.DAL.Models;
 using ShoppingCart.Interfaces;
-using ShoppingCart.Logger;
-using ShoppingCart.Models;
 using ShoppingCart.Repositories;
-using ShoppingCart.Services;
 using Stripe;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NLog;
 using System.Threading.Tasks;
+using CloudinaryDotNet;
+using ShoppingCart.Logger;
+using ShoppingCart.DTO.DTOs;
+using ShoppingCart.HELPERS.Helpers;
+using ShoppingCart.BLL.Class;
 
-namespace ShoppingCart
+namespace ShoppingCart.WEBAPI
 {
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
-            LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -68,6 +68,20 @@ namespace ShoppingCart
             services.AddSingleton<ILoggerManager, LoggerService>();
             services.AddScoped<ICorpSalesRepository, CorpSalesRepository>();
             services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
+            services.AddScoped<AdminDashboardBL>();
+            services.AddScoped<BooksBL>();
+            services.AddScoped<CartBL>();
+            services.AddScoped<CorpSalesBL>();
+            services.AddScoped<MenusBL>();
+            services.AddScoped<OrdersBL>();
+            services.AddScoped<UserBL>();
+
+
+
+
+
+
+
 
             services.Configure<StripeSettings>(Configuration.GetSection("StripeToken"));
             services.AddDbContext<ShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("myConnection")));
@@ -108,7 +122,6 @@ namespace ShoppingCart
 
             app.UseRouting();
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
-            //  app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();

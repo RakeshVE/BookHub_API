@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingCart.DTOs;
+using ShoppingCart.BLL.Class;
+using ShoppingCart.DTO.DTOs;
 using ShoppingCart.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,8 @@ namespace ShoppingCart.Controllers
     [ApiController]
     public class CorpSalesController : ControllerBase
     {
-        private readonly ICorpSalesRepository _corpsales;
-        public CorpSalesController(ICorpSalesRepository corpsales)
+        private readonly CorpSalesBL _corpsales;
+        public CorpSalesController(CorpSalesBL corpsales)
         {
             _corpsales = corpsales;
         }
