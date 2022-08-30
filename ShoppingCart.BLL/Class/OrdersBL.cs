@@ -82,5 +82,11 @@ namespace ShoppingCart.BLL.Class
             return await _ordersRepository.GetOrdersPlaced( userId);
 
         }
+        public async Task AddPaymentDetails(PaymentDto payment)
+        {
+            await _ordersRepository.AddPaymentDetails(payment);
+
+        }
+
     }
 }

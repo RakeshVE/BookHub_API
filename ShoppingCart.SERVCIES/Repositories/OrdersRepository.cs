@@ -274,6 +274,30 @@ namespace ShoppingCart.Repositories
             return orderPlcedDTO;
         }
 
+        public async Task AddPaymentDetails(PaymentDto payment)
+        {
+            try
+            {
+                var paymentdetails = new PaymentDetail
+                {
+                    CheckoutId = payment.CheckoutId,
+                    UserId = payment.UserId,
+                    TransactionId= payment.TransactionId,
+                    TransactionType= payment.TransactionType,
+                    PaymentMode= payment.PaymentMode,
+                    Status= payment.Status,
+                    Amount= payment.Amount,
+
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = payment.CreatedBy
+                };
+                _context.PaymentDetails.Add(paymentdetails);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
     }
 }
 
