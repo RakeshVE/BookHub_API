@@ -375,5 +375,28 @@ namespace ShoppingCart.Controllers
 
             return Ok(payInvoiceUrl);
         }
+
+        [HttpPost("PaymentDetails")]
+        public async Task<ActionResult> AddPaymentDetails([FromBody] PaymentDto payment)
+        {
+            try
+            {
+                if (payment is null)
+                {
+                    return BadRequest();
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+                await _ordersRepository.AddPaymentDetails(payment);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _loggerManager.LogError($"Something went wrong inside AddBookToWishlist action: {ex.Message}");
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
+        }
     }
 }
