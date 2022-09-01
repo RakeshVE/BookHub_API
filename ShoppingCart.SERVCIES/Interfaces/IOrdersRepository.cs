@@ -22,7 +22,7 @@ namespace ShoppingCart.Interfaces
         Task AddOrderDetails(int[] bookId, int userId, int checkoutId);
         Task<IEnumerable<OrderPlcedDTO>> GetOrdersPlaced(int userId);
         Task<List<AdminOrderDetailsDto>> GetOrdersAsync();
-
+        Task AddPaymentDetails(PaymentDto payment);
 
     }
 }
